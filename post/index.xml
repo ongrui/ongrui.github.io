@@ -6,11 +6,11 @@
     <description>Recent content in Posts on 菜狗瑞的爬坑记录</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 04 Apr 2020 12:00:00 +0800</lastBuildDate><atom:link href="https://ongrui.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 04 Apr 2020 00:00:00 +0800</lastBuildDate><atom:link href="https://ongrui.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>第一篇文章</title>
       <link>https://ongrui.github.io/post/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</link>
-      <pubDate>Sat, 04 Apr 2020 12:00:00 +0800</pubDate>
+      <pubDate>Sat, 04 Apr 2020 00:00:00 +0800</pubDate>
       
       <guid>https://ongrui.github.io/post/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</guid>
       <description>第一篇文章 写点儿啥呢
@@ -19,6 +19,7 @@ hugo的文档有点儿多，没找到config.toml的说明文档 [手动笑哭]
 最后各种Google，昨晚终于弄好了
 其实昨天一直边玩儿边搞，在家弄效率是不太高 ^_^
 但是这个为啥不兼容markdown的表情 ToT
+今天是清明节，本来打算回家&amp;hellip;，改到五一假期再回吧
 祝自个儿下周二顺利吧
 开始学习&amp;hellip;</description>
     </item>
