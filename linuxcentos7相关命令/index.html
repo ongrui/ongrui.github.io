@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>linux(Centos7)相关命令 持续更新... - 菜狗瑞的学习周记</title><meta name="Description" content="关于 LoveIt 主题"><meta property="og:title" content="linux(Centos7)相关命令 持续更新..." />
+<meta property="og:description" content="开篇啰嗦 啥时候更新时间间隔超过三个月我就把持续更新去掉 话说作为一个测试，第一篇文章是不是应该得是测试相关的 唉，在公司学的最多的就是linux" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ongrui.github.io/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/" /><meta property="og:image" content="https://ongrui.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-04-10T00:00:00&#43;08:00" />
+<meta property="article:modified_time" content="2021-04-10T00:00:00&#43;08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://ongrui.github.io/logo.png"/>
+
+<meta name="twitter:title" content="linux(Centos7)相关命令 持续更新..."/>
+<meta name="twitter:description" content="开篇啰嗦 啥时候更新时间间隔超过三个月我就把持续更新去掉 话说作为一个测试，第一篇文章是不是应该得是测试相关的 唉，在公司学的最多的就是linux"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="img/icon.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://ongrui.github.io/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/" /><link rel="prev" href="https://ongrui.github.io/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" /><link rel="next" href="https://ongrui.github.io/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "linux(Centos7)相关命令 持续更新...",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/ongrui.github.io\/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4\/"
+        },"genre": "posts","keywords": "linux","wordcount":  1149 ,
+        "url": "https:\/\/ongrui.github.io\/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4\/","datePublished": "2021-04-10T00:00:00+08:00","dateModified": "2021-04-10T00:00:00+08:00","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": "https:\/\/ongrui.github.io\/img\/logo.png"},"author": {
+                "@type": "Person",
+                "name": "作者"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="菜狗瑞的学习周记">菜狗瑞的学习周记</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"><link rel="shortcut icon" href="/img/001.ico" type="image/x-icon"/> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item language" title="选择语言">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+                        <select class="language-select" id="language-select-desktop" onchange="location = this.value;"><option value="/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/" selected>简体中文</option></select>
+                    </a><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="请输入要搜索的关键字" id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="菜狗瑞的学习周记">菜狗瑞的学习周记</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="请输入要搜索的关键字" id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title=""><link rel="shortcut icon" href="/img/001.ico" type="image/x-icon"/>所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a><a href="javascript:void(0);" class="menu-item" title="选择语言">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+                    <select class="language-select" onchange="location = this.value;"><option value="/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/" selected>简体中文</option></select>
+                </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">linux(Centos7)相关命令 持续更新...</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>作者</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw"></i>linux</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-04-10">2021-04-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1149 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;<span id="/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/" class="leancloud_visitors" data-flag-title="linux(Centos7)相关命令 持续更新...">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#文件操作相关">文件操作相关</a>
+      <ul>
+        <li><a href="#文件拷贝-cp">文件拷贝 cp</a></li>
+        <li><a href="#文件移动-mv">文件移动 mv</a></li>
+        <li><a href="#文件查找">文件查找</a></li>
+      </ul>
+    </li>
+    <li><a href="#vim相关"><code>vim</code>相关</a>
+      <ul>
+        <li><a href="#进入编辑模式">进入编辑模式</a></li>
+        <li><a href="#退出编辑模式">退出编辑模式</a></li>
+        <li><a href="#查找">查找</a></li>
+        <li><a href="#替换">替换</a></li>
+        <li><a href="#退出">退出</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="开篇啰嗦">开篇啰嗦</h1>
+<p>啥时候更新时间间隔超过三个月我就把持续更新去掉
+话说作为一个测试，第一篇文章是不是应该得是测试相关的
+唉，在公司学的最多的就是linux
+先写这个吧，明天或再写一篇测试相关的
+下面都是我目前能想到或工作中常用的</p>
+<h2 id="文件操作相关">文件操作相关</h2>
+<h3 id="文件拷贝-cp">文件拷贝 cp</h3>
+<ul>
+<li>拷贝文件：<code>cp 要拷贝的文件 目标路径</code></li>
+<li>拷贝文件<code>redis.conf</code>到<code>/etc/</code>目录下</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# cp redis.conf /etc/
+[root@rui redis-6.2.0]# ls /etc/redis.conf 
+/etc/redis.conf
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>拷贝文件夹：<code>cp -r 要拷贝的文件夹 目标路径</code></li>
+<li>拷贝文件夹<code>redis-6.2.0</code>到<code>/usr/local/</code>目录下</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui home]# cp -r redis-6.2.0/ /usr/local/
+[root@rui home]# ls /usr/local/
+bin  games    lib    libexec  redis-6.2.0  share
+etc  include  lib64  proc     sbin         src
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="文件移动-mv">文件移动 mv</h3>
+<ul>
+<li>移动文件夹/文件：<code>mv 要移动的文件夹或者是文件 目标路径</code></li>
+<li>移动文件<code>redis.conf</code>到<code>src</code>目录下</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# mv redis.conf src/
+[root@rui redis-6.2.0]# ls src/redis.conf 
+src/redis.conf
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="文件查找">文件查找</h3>
+<ul>
+<li>方式一：<code>find 要查找的路径 -name 要查找的文件</code></li>
+<li><code>find</code>会遍历指定路径下的所有文件，然后返回符合条件的，支持模糊查询</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# find ./ -name redis.c*
+./src/redis.conf
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>方式二：<code>locate 要查找的文件</code></li>
+<li><code>locate</code> 在<code>/var/lib/mlocate/</code>目录下存放着一个数据库文件，其实使用<code>locate</code>查询是查询的数据库，所以<code>locate</code>非常快</li>
+<li><code>locate</code>会返回所有包含文件名的文件</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/red
+/home/redis-6.2.0/src/redis-benchmark
+/home/redis-6.2.0/src/redis-benchmark.c
+/home/redis-6.2.0/src/redis-benchmark.d
+/home/redis-6.2.0/src/redis-benchmark.o
+/home/redis-6.2.0/src/redis-check-aof
+/home/redis-6.2.0/src/redis-check-aof.c
+/home/redis-6.2.0/src/redis-check-aof.d
+/home/redis-6.2.0/src/redis-check-aof.o
+/home/redis-6.2.0/src/redis-check-rdb
+/home/redis-6.2.0/src/redis-check-rdb.c
+/home/redis-6.2.0/src/redis-check-rdb.d
+/home/redis-6.2.0/src/redis-check-rdb.o
+/home/redis-6.2.0/src/redis-cli
+/home/redis-6.2.0/src/redis-cli.c
+/home/redis-6.2.0/src/redis-cli.d
+/home/redis-6.2.0/src/redis-cli.o
+/home/redis-6.2.0/src/redis-sentinel
+/home/redis-6.2.0/src/redis-server
+/home/redis-6.2.0/src/redis-trib.rb
+/home/redis-6.2.0/src/redis.conf
+/home/redis-6.2.0/src/redisassert.h
+/home/redis-6.2.0/src/redismodule.h
+</code></pre></td></tr></table>
+</div>
+</div><p>然后新建一个文件，再查询一次</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# &gt; /home/redis-6.2.0/src/testfile
+[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/testf
+[root@rui redis-6.2.0]# ll /home/redis-6.2.0/src/testfile 
+-rw-r--r--. 1 root root 0 Apr 10 22:37 /home/redis-6.2.0/src/testfile
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到，没有查到，因为<code>locate</code>的数据库不是实时更新的，可以使用<code>updatedb</code>手动更新，也可以把更新命令配置到系统的任务计划表，定时执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# updatedb
+[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/testf
+/home/redis-6.2.0/src/testfile
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到更新之后就查到了</p>
+<h2 id="vim相关"><code>vim</code>相关</h2>
+<h3 id="进入编辑模式">进入编辑模式</h3>
+<ul>
+<li>按<code>i</code>进入编辑模式后光标会在当前位置</li>
+<li>按<code>I</code>进入编辑模式后光标会在当前行行首</li>
+<li>按<code>a</code>进入编辑模式后，光标在当前字符后</li>
+<li>按<code>A</code>进入编辑模式后，光标会在当前行行尾</li>
+<li>按<code>o</code>进入编辑模式后，会在当前行下一行新开一行</li>
+<li>按<code>O</code>进入编辑模式后，会在当前行上一行新开一行</li>
+</ul>
+<p><code>我用的最多的是i</code></p>
+<h3 id="退出编辑模式">退出编辑模式</h3>
+<ul>
+<li>按<code>ESC</code>退出编辑模式</li>
+</ul>
+<h3 id="查找">查找</h3>
+<ul>
+<li>使用：<code>/要查找的内容</code></li>
+<li>使用<code>vim /文件名</code>打开文件后，输入<code>/</code>要查找的内容即可，比如下面我要在<code>redis.conf</code>配置文件中查找<code>bind</code>关键字</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/img/image-20210410145934938.png"
+        data-srcset="/img/image-20210410145934938.png, /img/image-20210410145934938.png 1.5x, /img/image-20210410145934938.png 2x"
+        data-sizes="auto"
+        alt="/img/image-20210410145934938.png"
+        title="image-20210410145934938" /></p>
+<ul>
+<li>
+<p>然后可以输入回车，会查找到该文件中第一个<code>bind</code>，可以输入<code>n</code>定位到下一个，输入<code>N</code>定位到上一个</p>
+</li>
+<li>
+<p>取消高亮可以输入<code>nohlsearch</code>，简写为<code>noh</code>，也可以输入<code>set nohlsearch</code> ，简写为<code>set noh</code></p>
+</li>
+</ul>
+<h3 id="替换">替换</h3>
+<ul>
+<li>
+<p>把文件中的所有<code>127.0.0.1</code>替换为<code>120.5.5.153</code></p>
+<ul>
+<li>使用：<code>:%s/127.0.0.1/120.5.5.153/g</code></li>
+</ul>
+</li>
+<li>
+<p>把当前行的<code>127.0.0.1</code>替换为<code>120.5.5.153</code></p>
+<ul>
+<li>使用：<code>:S/127.0.0.1/120.5.5.153/g</code></li>
+</ul>
+</li>
+</ul>
+<p><code>还有很多替换相关的命令，这里只是写了常用的</code></p>
+<h3 id="退出">退出</h3>
+<ul>
+<li>退出不保存<code>:q</code></li>
+<li>强制退出不保存<code>:q!</code></li>
+<li>保存并退出<code>:wq</code></li>
+<li>强制保存并退出<code>:wq!</code></li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-04-10</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/linux/">linux</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" class="prev" rel="prev" title="第一篇文章"><i class="fas fa-angle-left fa-fw"></i>第一篇文章</a>
+            <a href="/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/" class="next" rel="next" title="接口测试工具的探索">接口测试工具的探索<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span>&nbsp;|&nbsp;<span class="license">菜狗瑞的学习周记</span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript">window.config={"code":{"maxShownLines":100},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-cn","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

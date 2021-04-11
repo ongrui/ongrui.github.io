@@ -1,37 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Posts on 菜狗瑞的爬坑周记</title>
-    <link>https://ongrui.github.io/post/</link>
-    <description>Recent content in Posts on 菜狗瑞的爬坑周记</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Fri, 10 Apr 2020 00:00:00 +0800</lastBuildDate><atom:link href="https://ongrui.github.io/post/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>linux(Centos7)相关命令</title>
-      <link>https://ongrui.github.io/post/linuxCentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</link>
-      <pubDate>Fri, 10 Apr 2020 00:00:00 +0800</pubDate>
-      
-      <guid>https://ongrui.github.io/post/linuxCentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</guid>
-      <description>Linux(Centos7)相关命令，持续更新&amp;hellip; 啥时候更新时间间隔超过三个月我就把持续更新去掉话说作为一个测试，第一篇文章是不是应该得是测试相关的唉，在公司学的最多的就是linux先写这个吧，明天或再写一篇测试相关的下面都是我目前能想到或工作中常用的文件操作相关 文件拷贝 cp  拷贝文件：cp 要拷贝的文件 目标路径 拷贝文件redis.conf到/etc/目录下  [root@rui redis-6.2.0]# cp redis.conf /etc/ [root@rui redis-6.2.0]# ls /etc/redis.conf /etc/redis.conf  拷贝文件夹：cp -r 要拷贝的文件夹 目标路径 拷贝文件夹redis-6.2.0到/usr/local/目录下  [root@rui home]# cp -r redis-6.2.0/ /usr/local/ [root@rui home]# ls /usr/local/ bin games lib libexec redis-6.2.0 share etc include lib64 proc sbin src 文件移动 mv  移动文件夹/文件：mv 要移动的文件夹或者是文件 目标路径 移动文件redis.conf到src目录下  [root@rui redis-6.2.0]# mv redis.conf src/ [root@rui redis-6.2.0]# ls src/redis.</description>
-    </item>
-    
-    <item>
-      <title>第一篇文章</title>
-      <link>https://ongrui.github.io/post/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</link>
-      <pubDate>Sat, 04 Apr 2020 00:00:00 +0800</pubDate>
-      
-      <guid>https://ongrui.github.io/post/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</guid>
-      <description>第一篇文章 写点儿啥呢
-这两天一直在弄博客，昨天弄了一天icon，
-hugo的文档有点儿多，没找到config.toml的说明文档 [手动笑哭]
-最后各种Google，昨晚终于弄好了
-其实昨天一直边玩儿边搞，在家弄效率是不太高 ^_^
-但是这个为啥不兼容markdown的表情 ToT
-今天是清明节，本来打算回家&amp;hellip;，改到五一假期再回吧
-祝自个儿下周二顺利吧
-开始学习&amp;hellip;</description>
-    </item>
-    
-  </channel>
-</rss>
