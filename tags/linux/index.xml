@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>linux - 标签 - 菜狗瑞的学习周记</title>
+        <link>https://ongrui.github.io/tags/linux/</link>
+        <description>linux - 标签 - 菜狗瑞的学习周记</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 10 Apr 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://ongrui.github.io/tags/linux/" rel="self" type="application/rss+xml" /><item>
+    <title>linux(Centos7)相关命令 持续更新...</title>
+    <link>https://ongrui.github.io/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</link>
+    <pubDate>Sat, 10 Apr 2021 00:00:00 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://ongrui.github.io/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</guid>
+    <description><![CDATA[开篇啰嗦 啥时候更新时间间隔超过三个月我就把持续更新去掉 话说作为一个测试，第一篇文章是不是应该得是测试相关的 唉，在公司学的最多的就是linux]]></description>
+</item></channel>
+</rss>

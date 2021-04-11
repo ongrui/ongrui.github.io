@@ -61,4 +61,4 @@ Disallow: /
 User-agent: ZoominfoBot
 Disallow: /
 
-Sitemap: https://ongrui.github.io/en/sitemap.xml
+Sitemap: https://ongrui.github.io/sitemap.xml
