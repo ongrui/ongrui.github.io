@@ -4,12 +4,12 @@
         <link>https://ongrui.github.io/posts/</link>
         <description>所有文章 | 菜狗瑞的学习周记</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 11 Apr 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://ongrui.github.io/posts/" rel="self" type="application/rss+xml" /><item>
-    <title>接口测试工具的探索</title>
+    <title>接口测试工具`code200`</title>
     <link>https://ongrui.github.io/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/</link>
     <pubDate>Sun, 11 Apr 2021 00:00:00 &#43;0800</pubDate>
     <author>作者</author>
     <guid>https://ongrui.github.io/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/</guid>
-    <description><![CDATA[开篇啰嗦 之前也写过接口测试工具，不过测试数据是放到Excel里面维护的 前段时间和两个厂的测试大佬聊，他们好像不太看好把测试数据维护到Exce]]></description>
+    <description><![CDATA[开篇啰嗦 这篇废话太多了，做完了新开一篇总结的 之前也写过接口测试工具，不过测试数据是放到Excel里面维护的 前段时间和两个测试大佬聊，他们好像]]></description>
 </item><item>
     <title>linux(Centos7)相关命令 持续更新...</title>
     <link>https://ongrui.github.io/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</link>

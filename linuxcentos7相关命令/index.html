@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/ongrui.github.io\/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4\/"
-        },"genre": "posts","keywords": "linux","wordcount":  1149 ,
+        },"genre": "posts","keywords": "linux","wordcount":  1386 ,
         "url": "https:\/\/ongrui.github.io\/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4\/","datePublished": "2021-04-10T00:00:00+08:00","dateModified": "2021-04-10T00:00:00+08:00","publisher": {
             "@type": "Organization",
             "name": "xxxx","logo": "https:\/\/ongrui.github.io\/img\/logo.png"},"author": {
@@ -104,7 +104,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">linux(Centos7)相关命令 持续更新...</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>作者</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw"></i>linux</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-04-10">2021-04-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1149 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-04-10">2021-04-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1386 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -129,14 +129,21 @@
         <li><a href="#退出">退出</a></li>
       </ul>
     </li>
+    <li><a href="#日志查看">日志查看</a>
+      <ul>
+        <li><a href="#实时刷新查看日志">实时刷新查看日志</a></li>
+        <li><a href="#查看日志前10行">查看日志前10行</a></li>
+        <li><a href="#查看第10行到第20行">查看第10行到第20行</a></li>
+      </ul>
+    </li>
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h1 id="开篇啰嗦">开篇啰嗦</h1>
-<p>啥时候更新时间间隔超过三个月我就把持续更新去掉
-话说作为一个测试，第一篇文章是不是应该得是测试相关的
-唉，在公司学的最多的就是linux
-先写这个吧，明天或再写一篇测试相关的
-下面都是我目前能想到或工作中常用的</p>
+<p>啥时候更新时间间隔超过三个月我就把持续更新去掉</p>
+<p>话说作为一个测试，第一篇文章是不是应该得是测试相关的</p>
+<p>唉，在公司学的最多的就是linux</p>
+<p>先写这个吧，明天再写一篇测试相关的</p>
+<p>下面都是我目前能想到或工作中常用的</p>
 <h2 id="文件操作相关">文件操作相关</h2>
 <h3 id="文件拷贝-cp">文件拷贝 cp</h3>
 <ul>
@@ -350,6 +357,45 @@ src/redis.conf
 <li>保存并退出<code>:wq</code></li>
 <li>强制保存并退出<code>:wq!</code></li>
 </ul>
+<h2 id="日志查看">日志查看</h2>
+<h3 id="实时刷新查看日志">实时刷新查看日志</h3>
+<ul>
+<li>方式一：使用：<code>tail -f -n 10 日志文件名称</code>
+<ul>
+<li><code>-f</code>：实时刷新</li>
+<li><code>-n</code>：行数关键字，后面跟行数，表示从后10行开始查看</li>
+</ul>
+</li>
+<li>方式二：使用：<code>tailf 日志文件名称</code>
+<ul>
+<li>默认从后十行开始查看</li>
+</ul>
+</li>
+</ul>
+<h3 id="查看日志前10行">查看日志前10行</h3>
+<ul>
+<li>使用：<code>head -n 行数 日志文件名称</code>
+<ul>
+<li><code>-n</code> ：行数关键字</li>
+</ul>
+</li>
+</ul>
+<h3 id="查看第10行到第20行">查看第10行到第20行</h3>
+<ul>
+<li>方式一：使用：<code>sed -n '10,20p' 日志文件名称</code>
+<ul>
+<li><code>-n</code>：打印制定行</li>
+<li><code>'10,20p'</code>：指定的行号</li>
+</ul>
+</li>
+<li>方式二：使用：<code>cat -n 日志文件名称 | head -n 20 | tail -n +10</code>
+<ul>
+<li><code>cat -n</code>：打印日志显示行号</li>
+<li><code>head -n 20</code>：打印到20行</li>
+<li><code>tail -n +10</code>：从第10行开始打印</li>
+</ul>
+</li>
+</ul>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
@@ -376,7 +422,7 @@ src/redis.conf
     </div>
 
     <div class="post-nav"><a href="/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" class="prev" rel="prev" title="第一篇文章"><i class="fas fa-angle-left fa-fw"></i>第一篇文章</a>
-            <a href="/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/" class="next" rel="next" title="接口测试工具的探索">接口测试工具的探索<i class="fas fa-angle-right fa-fw"></i></a></div>
+            <a href="/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/" class="next" rel="next" title="接口测试工具`code200`">接口测试工具`code200`<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 </article></div>
             </main><footer class="footer">
