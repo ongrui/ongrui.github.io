@@ -1,0 +1,162 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>接口测试 - 分类 - 菜狗瑞的学习周记</title>
+        <link>https://testoai.github.io/categories/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95/</link>
+        <description>接口测试 - 分类 - 菜狗瑞的学习周记</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 17 Apr 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/categories/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95/" rel="self" type="application/rss+xml" /><item>
+    <title>接口测试小工具文档</title>
+    <link>https://testoai.github.io/posts/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B0%8F%E5%B7%A5%E5%85%B7%E6%96%87%E6%A1%A3/</link>
+    <pubDate>Sat, 17 Apr 2021 00:00:00 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://testoai.github.io/posts/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B0%8F%E5%B7%A5%E5%85%B7%E6%96%87%E6%A1%A3/</guid>
+    <description><![CDATA[<h2 id="支持的请求方式">支持的请求方式</h2>
+<ul>
+<li>支持<code>GET</code>请求</li>
+<li>支持<code>POST</code>请求</li>
+</ul>
+<h2 id="支持的请求体类型">支持的请求体类型</h2>
+<ul>
+<li>支持<code>json</code>格式</li>
+<li>支持<code>multipart/form-data</code>格式</li>
+</ul>
+<h2 id="返回值相关">返回值相关</h2>
+<ul>
+<li>支持返回值拼接，在<code>respParams</code>参数中写入<code>GET</code>和<code>SET</code>的<code>kay</code>，使用方式见下面参数解释</li>
+</ul>
+<h1 id="20210415">2021.04.15</h1>
+<h2 id="配置文件">配置文件</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">case1</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{
+</span><span class="s1">        &#34;method&#34;:&#34;POST&#34;,
+</span><span class="s1">        &#34;header&#34;:{
+</span><span class="s1">            &#34;content-Type&#34;:&#34;application/json&#34;,
+</span><span class="s1">            &#34;Authorization&#34;:&#34;Bearer d15a43e2-ade8-4566-95b6-b3f7e7821d63&#34;
+</span><span class="s1">        },
+</span><span class="s1">        &#34;bodyType&#34;:&#34;multipart/form-data&#34;,
+</span><span class="s1">        &#34;body&#34;:{
+</span><span class="s1">            &#34;sourceSystem&#34;: &#34;corex&#34;,
+</span><span class="s1">            &#34;stAppno&#34;: &#34;200000030139&#34;,
+</span><span class="s1">            &#34;stGrpNo&#34;: &#34;2&#34;,
+</span><span class="s1">            &#34;rpFindings&#34;: &#34;test1&#34;,
+</span><span class="s1">            &#34;rpInspectCon&#34;: &#34;test结论&#34;,
+</span><span class="s1">            &#34;osrContent&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;rpKeyword&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;rpChkUserId&#34;: &#34;manager&#34;,
+</span><span class="s1">            &#34;rpChkUsername&#34;: &#34;管理员&#34;,
+</span><span class="s1">            &#34;rpChkDt&#34;: &#34;2020-07-01T18:42:40.000&#34;,
+</span><span class="s1">            &#34;rpPositivePpt&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;rpCriticalGrade&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;tisID&#34;: &#34;df319296aa714e4dafef813781f6b7a1&#34;
+</span><span class="s1">        },
+</span><span class="s1">        &#34;files&#34;:{
+</span><span class="s1">            &#34;file&#34;:&#34;C:/Users/rui/Pictures/Saved Pictures/test.png&#34;,
+</span><span class="s1">            &#34;file1&#34;:&#34;C:/Users/rui/Pictures/Saved Pictures/test.png&#34;
+</span><span class="s1">        },
+</span><span class="s1">        respParams:{
+</span><span class="s1">            &#34;data,token_type&amp;data,access_token&#34;:&#34;case3,header,Authorization&#34;
+</span><span class="s1">        }
+</span><span class="s1">    }&#39;</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p><code>method</code>：参数值：<code>GET</code>、<code>POST</code></p>
+</li>
+<li>
+<p><code>header</code>：键值对</p>
+</li>
+<li>
+<p><code>bodyType</code>：参数值：</p>
+<ul>
+<li><code>urlParams</code>：如果是<code>URL</code>上的参数写到<code>body</code>中的时候，<code>bodyType</code>需要写入该值</li>
+<li><code>json</code>：<code>json</code>形式的请求体</li>
+<li><code>multipart/form-data</code>：表单格式的请求体</li>
+</ul>
+</li>
+<li>
+<p><code>body</code>：键值对，支持嵌套</p>
+<ul>
+<li><code>GET</code>：<code>url</code>上的键值对可以写到<code>body</code>上，不能嵌套</li>
+<li><code>POST</code>：支持嵌套的<code>json</code>类型</li>
+<li>表单格式：键值对的参数可以写到<code>body</code>上，如果有文件上传，写到下面的<code>files</code></li>
+</ul>
+</li>
+<li>
+<p><code>files</code>：键为文件的<code>key</code>，值为文件地址，可以写多个键值对，不能嵌套</p>
+</li>
+<li>
+<p><code>response</code>：将<code>json</code>返回值的参数取出，写入到其它<code>case</code>的参数中</p>
+<ul>
+<li>
+<p>一个参数对应一个参数，取<code>data,token_type</code>中的参数放到<code>case3,header,Authorization</code>中</p>
+</li>
+<li>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="err">response:</span><span class="p">{</span>
+	<span class="nt">&#34;data,token_type&#34;</span><span class="p">:</span><span class="s2">&#34;case3,header,Authorization&#34;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>多个参数对应一个参数，取<code>data,token_type</code>和<code>data,access_token</code>中的值拼接起来放到<code>case3,header,Authorization</code>中</p>
+</li>
+<li>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="err">response:</span><span class="p">{</span>
+	<span class="nt">&#34;data,token_type&amp;data,access_token&#34;</span><span class="p">:</span><span class="s2">&#34;case3,header,Authorization&#34;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+</ul>
+]]></description>
+</item></channel>
+</rss>

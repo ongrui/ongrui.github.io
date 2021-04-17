@@ -1,14 +1,267 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>linux - 分类 - 菜狗瑞的学习周记</title>
-        <link>https://ongrui.github.io/categories/linux/</link>
+        <link>https://testoai.github.io/categories/linux/</link>
         <description>linux - 分类 - 菜狗瑞的学习周记</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 10 Apr 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://ongrui.github.io/categories/linux/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 10 Apr 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/categories/linux/" rel="self" type="application/rss+xml" /><item>
     <title>linux(Centos7)相关命令 持续更新...</title>
-    <link>https://ongrui.github.io/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</link>
+    <link>https://testoai.github.io/posts/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</link>
     <pubDate>Sat, 10 Apr 2021 00:00:00 &#43;0800</pubDate>
     <author>作者</author>
-    <guid>https://ongrui.github.io/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</guid>
-    <description><![CDATA[开篇啰嗦 啥时候更新时间间隔超过三个月我就把持续更新去掉 话说作为一个测试，第一篇文章是不是应该得是测试相关的 唉，在公司学的最多的就是linux]]></description>
+    <guid>https://testoai.github.io/posts/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</guid>
+    <description><![CDATA[<h1 id="开篇啰嗦">开篇啰嗦</h1>
+<p>啥时候更新时间间隔超过三个月我就把持续更新去掉</p>
+<p>话说作为一个测试，第一篇文章是不是应该得是测试相关的</p>
+<p>唉，在公司学的最多的就是linux</p>
+<p>先写这个吧，明天再写一篇测试相关的</p>
+<p>下面都是我目前能想到或工作中常用的</p>
+<h2 id="文件操作相关">文件操作相关</h2>
+<h3 id="文件拷贝-cp">文件拷贝 cp</h3>
+<ul>
+<li>拷贝文件：<code>cp 要拷贝的文件 目标路径</code></li>
+<li>拷贝文件<code>redis.conf</code>到<code>/etc/</code>目录下</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# cp redis.conf /etc/
+[root@rui redis-6.2.0]# ls /etc/redis.conf 
+/etc/redis.conf
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>拷贝文件夹：<code>cp -r 要拷贝的文件夹 目标路径</code></li>
+<li>拷贝文件夹<code>redis-6.2.0</code>到<code>/usr/local/</code>目录下</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui home]# cp -r redis-6.2.0/ /usr/local/
+[root@rui home]# ls /usr/local/
+bin  games    lib    libexec  redis-6.2.0  share
+etc  include  lib64  proc     sbin         src
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="文件移动-mv">文件移动 mv</h3>
+<ul>
+<li>移动文件夹/文件：<code>mv 要移动的文件夹或者是文件 目标路径</code></li>
+<li>移动文件<code>redis.conf</code>到<code>src</code>目录下</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# mv redis.conf src/
+[root@rui redis-6.2.0]# ls src/redis.conf 
+src/redis.conf
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="文件查找">文件查找</h3>
+<ul>
+<li>方式一：<code>find 要查找的路径 -name 要查找的文件</code></li>
+<li><code>find</code>会遍历指定路径下的所有文件，然后返回符合条件的，支持模糊查询</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# find ./ -name redis.c*
+./src/redis.conf
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>方式二：<code>locate 要查找的文件</code></li>
+<li><code>locate</code> 在<code>/var/lib/mlocate/</code>目录下存放着一个数据库文件，其实使用<code>locate</code>查询是查询的数据库，所以<code>locate</code>非常快</li>
+<li><code>locate</code>会返回所有包含文件名的文件</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/red
+/home/redis-6.2.0/src/redis-benchmark
+/home/redis-6.2.0/src/redis-benchmark.c
+/home/redis-6.2.0/src/redis-benchmark.d
+/home/redis-6.2.0/src/redis-benchmark.o
+/home/redis-6.2.0/src/redis-check-aof
+/home/redis-6.2.0/src/redis-check-aof.c
+/home/redis-6.2.0/src/redis-check-aof.d
+/home/redis-6.2.0/src/redis-check-aof.o
+/home/redis-6.2.0/src/redis-check-rdb
+/home/redis-6.2.0/src/redis-check-rdb.c
+/home/redis-6.2.0/src/redis-check-rdb.d
+/home/redis-6.2.0/src/redis-check-rdb.o
+/home/redis-6.2.0/src/redis-cli
+/home/redis-6.2.0/src/redis-cli.c
+/home/redis-6.2.0/src/redis-cli.d
+/home/redis-6.2.0/src/redis-cli.o
+/home/redis-6.2.0/src/redis-sentinel
+/home/redis-6.2.0/src/redis-server
+/home/redis-6.2.0/src/redis-trib.rb
+/home/redis-6.2.0/src/redis.conf
+/home/redis-6.2.0/src/redisassert.h
+/home/redis-6.2.0/src/redismodule.h
+</code></pre></td></tr></table>
+</div>
+</div><p>然后新建一个文件，再查询一次</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# &gt; /home/redis-6.2.0/src/testfile
+[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/testf
+[root@rui redis-6.2.0]# ll /home/redis-6.2.0/src/testfile 
+-rw-r--r--. 1 root root 0 Apr 10 22:37 /home/redis-6.2.0/src/testfile
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到，没有查到，因为<code>locate</code>的数据库不是实时更新的，可以使用<code>updatedb</code>手动更新，也可以把更新命令配置到系统的任务计划表，定时执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# updatedb
+[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/testf
+/home/redis-6.2.0/src/testfile
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到更新之后就查到了</p>
+<h2 id="vim相关"><code>vim</code>相关</h2>
+<h3 id="进入编辑模式">进入编辑模式</h3>
+<ul>
+<li>按<code>i</code>进入编辑模式后光标会在当前位置</li>
+<li>按<code>I</code>进入编辑模式后光标会在当前行行首</li>
+<li>按<code>a</code>进入编辑模式后，光标在当前字符后</li>
+<li>按<code>A</code>进入编辑模式后，光标会在当前行行尾</li>
+<li>按<code>o</code>进入编辑模式后，会在当前行下一行新开一行</li>
+<li>按<code>O</code>进入编辑模式后，会在当前行上一行新开一行</li>
+</ul>
+<p><code>我用的最多的是i</code></p>
+<h3 id="退出编辑模式">退出编辑模式</h3>
+<ul>
+<li>按<code>ESC</code>退出编辑模式</li>
+</ul>
+<h3 id="查找">查找</h3>
+<ul>
+<li>使用：<code>/要查找的内容</code></li>
+<li>使用<code>vim /文件名</code>打开文件后，输入<code>/</code>要查找的内容即可，比如下面我要在<code>redis.conf</code>配置文件中查找<code>bind</code>关键字</li>
+</ul>
+<a class="lightgallery" href="/img/image-20210410145934938.png" title="/img/image-20210410145934938.png" data-thumbnail="/img/image-20210410145934938.png">
+        
+    </a>
+<ul>
+<li>
+<p>然后可以输入回车，会查找到该文件中第一个<code>bind</code>，可以输入<code>n</code>定位到下一个，输入<code>N</code>定位到上一个</p>
+</li>
+<li>
+<p>取消高亮可以输入<code>nohlsearch</code>，简写为<code>noh</code>，也可以输入<code>set nohlsearch</code> ，简写为<code>set noh</code></p>
+</li>
+</ul>
+<h3 id="替换">替换</h3>
+<ul>
+<li>
+<p>把文件中的所有<code>127.0.0.1</code>替换为<code>120.5.5.153</code></p>
+<ul>
+<li>使用：<code>:%s/127.0.0.1/120.5.5.153/g</code></li>
+</ul>
+</li>
+<li>
+<p>把当前行的<code>127.0.0.1</code>替换为<code>120.5.5.153</code></p>
+<ul>
+<li>使用：<code>:S/127.0.0.1/120.5.5.153/g</code></li>
+</ul>
+</li>
+</ul>
+<p><code>还有很多替换相关的命令，这里只是写了常用的</code></p>
+<h3 id="退出">退出</h3>
+<ul>
+<li>退出不保存<code>:q</code></li>
+<li>强制退出不保存<code>:q!</code></li>
+<li>保存并退出<code>:wq</code></li>
+<li>强制保存并退出<code>:wq!</code></li>
+</ul>
+<h2 id="日志查看">日志查看</h2>
+<h3 id="实时刷新查看日志">实时刷新查看日志</h3>
+<ul>
+<li>方式一：使用：<code>tail -f -n 10 日志文件名称</code>
+<ul>
+<li><code>-f</code>：实时刷新</li>
+<li><code>-n</code>：行数关键字，后面跟行数，表示从后10行开始查看</li>
+</ul>
+</li>
+<li>方式二：使用：<code>tailf 日志文件名称</code>
+<ul>
+<li>默认从后十行开始查看</li>
+</ul>
+</li>
+</ul>
+<h3 id="查看日志前10行">查看日志前10行</h3>
+<ul>
+<li>使用：<code>head -n 行数 日志文件名称</code>
+<ul>
+<li><code>-n</code> ：行数关键字</li>
+</ul>
+</li>
+</ul>
+<h3 id="查看第10行到第20行">查看第10行到第20行</h3>
+<ul>
+<li>方式一：使用：<code>sed -n '10,20p' 日志文件名称</code>
+<ul>
+<li><code>-n</code>：打印制定行</li>
+<li><code>'10,20p'</code>：指定的行号</li>
+</ul>
+</li>
+<li>方式二：使用：<code>cat -n 日志文件名称 | head -n 20 | tail -n +10</code>
+<ul>
+<li><code>cat -n</code>：打印日志显示行号</li>
+<li><code>head -n 20</code>：打印到20行</li>
+<li><code>tail -n +10</code>：从第10行开始打印</li>
+</ul>
+</li>
+</ul>
+]]></description>
 </item></channel>
 </rss>

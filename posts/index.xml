@@ -1,28 +1,685 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>所有文章 - 菜狗瑞的学习周记</title>
-        <link>https://ongrui.github.io/posts/</link>
+        <link>https://testoai.github.io/posts/</link>
         <description>所有文章 | 菜狗瑞的学习周记</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 11 Apr 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://ongrui.github.io/posts/" rel="self" type="application/rss+xml" /><item>
-    <title>接口测试工具`code200`</title>
-    <link>https://ongrui.github.io/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/</link>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 17 Apr 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>接口测试小工具文档</title>
+    <link>https://testoai.github.io/posts/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B0%8F%E5%B7%A5%E5%85%B7%E6%96%87%E6%A1%A3/</link>
+    <pubDate>Sat, 17 Apr 2021 00:00:00 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://testoai.github.io/posts/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B0%8F%E5%B7%A5%E5%85%B7%E6%96%87%E6%A1%A3/</guid>
+    <description><![CDATA[<h2 id="支持的请求方式">支持的请求方式</h2>
+<ul>
+<li>支持<code>GET</code>请求</li>
+<li>支持<code>POST</code>请求</li>
+</ul>
+<h2 id="支持的请求体类型">支持的请求体类型</h2>
+<ul>
+<li>支持<code>json</code>格式</li>
+<li>支持<code>multipart/form-data</code>格式</li>
+</ul>
+<h2 id="返回值相关">返回值相关</h2>
+<ul>
+<li>支持返回值拼接，在<code>respParams</code>参数中写入<code>GET</code>和<code>SET</code>的<code>kay</code>，使用方式见下面参数解释</li>
+</ul>
+<h1 id="20210415">2021.04.15</h1>
+<h2 id="配置文件">配置文件</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">case1</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{
+</span><span class="s1">        &#34;method&#34;:&#34;POST&#34;,
+</span><span class="s1">        &#34;header&#34;:{
+</span><span class="s1">            &#34;content-Type&#34;:&#34;application/json&#34;,
+</span><span class="s1">            &#34;Authorization&#34;:&#34;Bearer d15a43e2-ade8-4566-95b6-b3f7e7821d63&#34;
+</span><span class="s1">        },
+</span><span class="s1">        &#34;bodyType&#34;:&#34;multipart/form-data&#34;,
+</span><span class="s1">        &#34;body&#34;:{
+</span><span class="s1">            &#34;sourceSystem&#34;: &#34;corex&#34;,
+</span><span class="s1">            &#34;stAppno&#34;: &#34;200000030139&#34;,
+</span><span class="s1">            &#34;stGrpNo&#34;: &#34;2&#34;,
+</span><span class="s1">            &#34;rpFindings&#34;: &#34;test1&#34;,
+</span><span class="s1">            &#34;rpInspectCon&#34;: &#34;test结论&#34;,
+</span><span class="s1">            &#34;osrContent&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;rpKeyword&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;rpChkUserId&#34;: &#34;manager&#34;,
+</span><span class="s1">            &#34;rpChkUsername&#34;: &#34;管理员&#34;,
+</span><span class="s1">            &#34;rpChkDt&#34;: &#34;2020-07-01T18:42:40.000&#34;,
+</span><span class="s1">            &#34;rpPositivePpt&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;rpCriticalGrade&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;tisID&#34;: &#34;df319296aa714e4dafef813781f6b7a1&#34;
+</span><span class="s1">        },
+</span><span class="s1">        &#34;files&#34;:{
+</span><span class="s1">            &#34;file&#34;:&#34;C:/Users/rui/Pictures/Saved Pictures/test.png&#34;,
+</span><span class="s1">            &#34;file1&#34;:&#34;C:/Users/rui/Pictures/Saved Pictures/test.png&#34;
+</span><span class="s1">        },
+</span><span class="s1">        respParams:{
+</span><span class="s1">            &#34;data,token_type&amp;data,access_token&#34;:&#34;case3,header,Authorization&#34;
+</span><span class="s1">        }
+</span><span class="s1">    }&#39;</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p><code>method</code>：参数值：<code>GET</code>、<code>POST</code></p>
+</li>
+<li>
+<p><code>header</code>：键值对</p>
+</li>
+<li>
+<p><code>bodyType</code>：参数值：</p>
+<ul>
+<li><code>urlParams</code>：如果是<code>URL</code>上的参数写到<code>body</code>中的时候，<code>bodyType</code>需要写入该值</li>
+<li><code>json</code>：<code>json</code>形式的请求体</li>
+<li><code>multipart/form-data</code>：表单格式的请求体</li>
+</ul>
+</li>
+<li>
+<p><code>body</code>：键值对，支持嵌套</p>
+<ul>
+<li><code>GET</code>：<code>url</code>上的键值对可以写到<code>body</code>上，不能嵌套</li>
+<li><code>POST</code>：支持嵌套的<code>json</code>类型</li>
+<li>表单格式：键值对的参数可以写到<code>body</code>上，如果有文件上传，写到下面的<code>files</code></li>
+</ul>
+</li>
+<li>
+<p><code>files</code>：键为文件的<code>key</code>，值为文件地址，可以写多个键值对，不能嵌套</p>
+</li>
+<li>
+<p><code>response</code>：将<code>json</code>返回值的参数取出，写入到其它<code>case</code>的参数中</p>
+<ul>
+<li>
+<p>一个参数对应一个参数，取<code>data,token_type</code>中的参数放到<code>case3,header,Authorization</code>中</p>
+</li>
+<li>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="err">response:</span><span class="p">{</span>
+	<span class="nt">&#34;data,token_type&#34;</span><span class="p">:</span><span class="s2">&#34;case3,header,Authorization&#34;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>多个参数对应一个参数，取<code>data,token_type</code>和<code>data,access_token</code>中的值拼接起来放到<code>case3,header,Authorization</code>中</p>
+</li>
+<li>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="err">response:</span><span class="p">{</span>
+	<span class="nt">&#34;data,token_type&amp;data,access_token&#34;</span><span class="p">:</span><span class="s2">&#34;case3,header,Authorization&#34;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+</ul>
+]]></description>
+</item><item>
+    <title>接口测试小工具</title>
+    <link>https://testoai.github.io/posts/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/</link>
     <pubDate>Sun, 11 Apr 2021 00:00:00 &#43;0800</pubDate>
     <author>作者</author>
-    <guid>https://ongrui.github.io/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/</guid>
-    <description><![CDATA[开篇啰嗦 这篇废话太多了，做完了新开一篇总结的 之前也写过接口测试工具，不过测试数据是放到Excel里面维护的 前段时间和两个测试大佬聊，他们好像]]></description>
+    <guid>https://testoai.github.io/posts/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/</guid>
+    <description><![CDATA[<ul>
+<li>开篇啰嗦</li>
+</ul>
+<p>这篇废话太多了，做完了新开一篇总结的</p>
+<p>之前也写过接口测试工具，不过测试数据是放到Excel里面维护的</p>
+<p>前段时间和两个测试大佬聊，他们好像不太看好把测试数据维护到Excel里面</p>
+<p>所以现在利用业余时间重新做一个，把数据放到配置文件里面</p>
+<p>思路和过程还有进度就展示在这里了</p>
+<p>啥时候有雏形的时候就放到<code>github</code>上去</p>
+<h2 id="20210417-1240更新">2021.04.17 12:40更新</h2>
+<h2 id="已经完成的">已经完成的</h2>
+<ul>
+<li>1.读取配置文件</li>
+<li>2.发送请求</li>
+<li>3.把指定的返回值拼接到指定的<code>KEY</code>上</li>
+</ul>
+<h2 id="下一步的计划">下一步的计划</h2>
+<ul>
+<li>1.对指定的返回值做判断</li>
+<li>2.写一个日志模块</li>
+<li>3.把<code>case</code>的<code>val</code>换成<code>yaml</code>格式的（这周看到了一个yaml的详细教程，不是不好解析，而是我不会😓）</li>
+</ul>
+<h2 id="github地址"><code>Github</code>地址</h2>
+<p><code>https://github.com/ongrui/code200</code></p>
+<h2 id="20210410-2338">2021.04.10 23:38</h2>
+<p>周五开始做的，目前先把配置文件的思路讲一下</p>
+<h3 id="配置文件">配置文件</h3>
+<ul>
+<li>接口地址放到一个<code>yaml</code>文件中，每个接口的case放到一个<code>yaml</code>文件中</li>
+</ul>
+<h4 id="url存放的配置文件">URL存放的配置文件</h4>
+<ul>
+<li><code>conn.yaml</code></li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">url</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">http://127.0.0.1/corexapi/oauth/token</span><span class="w">
+</span><span class="w">    </span><span class="nt">case</span><span class="p">:</span><span class="w"> </span><span class="l">case1,case2</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">http://127.0.0.1/corexapi/external/pacs/cancelRegister</span><span class="w">
+</span><span class="w">    </span><span class="nt">case</span><span class="p">:</span><span class="w"> </span><span class="l">case3,case4</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p><code>url</code>：要测试的接口地址</p>
+</li>
+<li>
+<p><code>case</code>：每个URL要执行的case，可以是多个值，对应下面的<code>case.yaml</code>的第一个<code>key</code></p>
+</li>
+</ul>
+<h4 id="case存放的配置文件">case存放的配置文件</h4>
+<ul>
+<li><code>case.yaml</code></li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">case1</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l">GET</span><span class="w">
+</span><span class="w">  </span><span class="nt">header</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l">application/json</span><span class="w">
+</span><span class="w">  </span><span class="nt">bodyType</span><span class="p">:</span><span class="w"> </span><span class="l">params</span><span class="w">
+</span><span class="w">  </span><span class="nt">body</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> 
+</span><span class="w">  </span><span class="nt">respParame</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">data,access_token</span><span class="p">:</span><span class="w"> </span><span class="l">case2,header,token</span><span class="w">
+</span><span class="w"></span><span class="nt">case2</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l">POST</span><span class="w">
+</span><span class="w">  </span><span class="nt">header</span><span class="p">:</span><span class="w"> </span><span class="l">json</span><span class="w">
+</span><span class="w">    </span><span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l">application/json</span><span class="w">
+</span><span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> 
+</span><span class="w">  </span><span class="nt">bodyType</span><span class="p">:</span><span class="w"> 
+</span><span class="w">  </span><span class="nt">body</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">test</span><span class="p">:</span><span class="w"> 
+</span><span class="w">  </span><span class="nt">respParame</span><span class="p">:</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>method</code>：请求方式</li>
+<li><code>header</code>：请求头，下面是请求头的内容，成对写入</li>
+<li><code>bodyType</code>：<code>body</code>类型</li>
+<li><code>body</code>：<code>body</code>内容</li>
+<li><code>respParame</code>：目的是把返回值中想要的参数拼接到其它<code>case</code>上
+<ul>
+<li><code>data,access_token</code>：为返回参数的<code>key</code>，要支持嵌套结构，比如下面的例子，<code>token</code>在<code>data</code>一层里面的时候，也可以获取到</li>
+<li><code>case2,header,token</code>：取到想要的参数后，把该参数拼接到的地方</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+    <span class="nt">&#34;success&#34;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&#34;code&#34;</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span>
+    <span class="nt">&#34;msg&#34;</span><span class="p">:</span><span class="s2">&#34;请求成功&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;data&#34;</span><span class="p">:{</span>
+        	<span class="nt">&#34;access_token&#34;</span><span class="p">:</span><span class="s2">&#34;96c0549c-f56c-4991-b351-8dad3adb40c2&#34;</span><span class="p">,</span>
+        	<span class="nt">&#34;token_type&#34;</span><span class="p">:</span><span class="s2">&#34;bearer&#34;</span><span class="p">,</span>
+        	<span class="nt">&#34;refresh_token&#34;</span><span class="p">:</span><span class="s2">&#34;de2ee487-6036-4770-a0a0-898086199157&#34;</span><span class="p">,</span>
+       		<span class="nt">&#34;expires_in&#34;</span><span class="p">:</span><span class="mi">86399</span><span class="p">,</span>
+       		<span class="nt">&#34;scope&#34;</span><span class="p">:</span><span class="s2">&#34;read write&#34;</span>
+        	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="工作流程">工作流程</h3>
+<ul>
+<li>先读取<code>conn.yaml</code>，然后去遍历对应的<code>case</code>，拿到请求后调用请求方法，把请求对象传进去，然后再对返回值做处理</li>
+</ul>
+<h2 id="20210412-2022">2021.04.12 20:22</h2>
+<h3 id="今日工作汇报">今日工作汇报</h3>
+<p>领导把我薅到济南分部来了，今天跟领导沟通了挺多关于服务端质量保障体系相关的东西</p>
+<p>在这边儿倒是停清闲，不过宾馆桌子太小了，还没插座😭，明天在公司多呆会儿</p>
+<a class="lightgallery" href="/img/6EB9B7A5-619F-4A43-B634-0B1C01A19CDA.jpeg" title="/img/6EB9B7A5-619F-4A43-B634-0B1C01A19CDA.jpeg" data-thumbnail="/img/6EB9B7A5-619F-4A43-B634-0B1C01A19CDA.jpeg">
+        
+    </a>
+<a class="lightgallery" href="/img/1CF695B2-456D-45A9-B80B-9639E8B46CAC.jpeg" title="/img/1CF695B2-456D-45A9-B80B-9639E8B46CAC.jpeg" data-thumbnail="/img/1CF695B2-456D-45A9-B80B-9639E8B46CAC.jpeg">
+        
+    </a>
+<p>嘿嘿，可以没有鼠标，但是不能没有键盘</p>
+<p>废话不说了，汇报工作正式开始</p>
+<h4 id="修改yaml配置文件">修改<code>yaml</code>配置文件</h4>
+<ul>
+<li>1.我把<code>case</code>的<code>val</code>改成了<code>json</code>形式的，<code>yaml</code>不好解析，改完就是下面这样</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">case1</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{
+</span><span class="s1">        &#34;method&#34;:&#34;POST&#34;,
+</span><span class="s1">        &#34;header&#34;:{
+</span><span class="s1">            &#34;content-Type&#34;:&#34;application/json&#34;
+</span><span class="s1">        },
+</span><span class="s1">        &#34;bodyType&#34;:&#34;form-data&#34;,
+</span><span class="s1">        &#34;body&#34;:{
+</span><span class="s1">            &#34;sourceSystem&#34;: &#34;corex&#34;,
+</span><span class="s1">            &#34;stAppno&#34;: &#34;0xx83hd8j3972&#34;,
+</span><span class="s1">            &#34;stGrpNo&#34;: &#34;2&#34;,
+</span><span class="s1">            &#34;rpFindings&#34;: &#34;测试所见&#34;,
+</span><span class="s1">            &#34;rpInspectCon&#34;: &#34;测试结论&#34;,
+</span><span class="s1">            &#34;osrContent&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;rpKeyword&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;rpChkUserId&#34;: &#34;manager&#34;,
+</span><span class="s1">            &#34;rpChkUsername&#34;: &#34;管理员&#34;,
+</span><span class="s1">            &#34;rpChkDt&#34;: &#34;2021-01-01T18:42:40.000&#34;,
+</span><span class="s1">            &#34;rpPositivePpt&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;rpCriticalGrade&#34;: &#34;&#34;,
+</span><span class="s1">            &#34;tisID&#34;: &#34;df3192o4icu14e4daf9jf83781f6b7a1&#34;
+</span><span class="s1">        },
+</span><span class="s1">        &#34;files&#34;:{
+</span><span class="s1">            &#34;file&#34;:&#34;test.png&#34;,
+</span><span class="s1">            &#34;filePath&#34;:&#34;../files/test.png&#34;
+</span><span class="s1">        }
+</span><span class="s1">    }&#39;</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><h4 id="配置文件读取相关代码">配置文件读取相关代码</h4>
+<ul>
+<li>2.今天把读取配置文件的写完了，贴个图吧，写的太烂，面向<code>struct</code>编程理解的太浅（看图得新建个标签页😂）</li>
+</ul>
+<a class="lightgallery" href="/img/image20210412215219.png" title="/img/image20210412215219.png" data-thumbnail="/img/image20210412215219.png">
+        
+    </a>
+<h2 id="20210417-1601">2021.04.17 16:01</h2>
+<p>完成了读取配置文件的业务、请求业务，还可以将<code>json</code>格式的<code>response</code>中指定<code>KEY</code>的值写入到其它的请求体或者请求头里面去</p>
+<p>这周看到了一篇关于<code>YAML</code>的详细文档，发现也很好解析，当时只是我自己菜，没有去网上仔细搜下😥，回头再改回<code>yaml</code>格式的​</p>
+<p>我的垃圾代码已经提交到了<code>github</code>上了，算是做个记录吧<code>https://github.com/ongrui/code200</code></p>
+<p>还有关于文章的</p>
+<p>图片可以放大了，把文章头部预览去掉了</p>
+]]></description>
 </item><item>
     <title>linux(Centos7)相关命令 持续更新...</title>
-    <link>https://ongrui.github.io/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</link>
+    <link>https://testoai.github.io/posts/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</link>
     <pubDate>Sat, 10 Apr 2021 00:00:00 &#43;0800</pubDate>
     <author>作者</author>
-    <guid>https://ongrui.github.io/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</guid>
-    <description><![CDATA[开篇啰嗦 啥时候更新时间间隔超过三个月我就把持续更新去掉 话说作为一个测试，第一篇文章是不是应该得是测试相关的 唉，在公司学的最多的就是linux]]></description>
+    <guid>https://testoai.github.io/posts/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</guid>
+    <description><![CDATA[<h1 id="开篇啰嗦">开篇啰嗦</h1>
+<p>啥时候更新时间间隔超过三个月我就把持续更新去掉</p>
+<p>话说作为一个测试，第一篇文章是不是应该得是测试相关的</p>
+<p>唉，在公司学的最多的就是linux</p>
+<p>先写这个吧，明天再写一篇测试相关的</p>
+<p>下面都是我目前能想到或工作中常用的</p>
+<h2 id="文件操作相关">文件操作相关</h2>
+<h3 id="文件拷贝-cp">文件拷贝 cp</h3>
+<ul>
+<li>拷贝文件：<code>cp 要拷贝的文件 目标路径</code></li>
+<li>拷贝文件<code>redis.conf</code>到<code>/etc/</code>目录下</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# cp redis.conf /etc/
+[root@rui redis-6.2.0]# ls /etc/redis.conf 
+/etc/redis.conf
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>拷贝文件夹：<code>cp -r 要拷贝的文件夹 目标路径</code></li>
+<li>拷贝文件夹<code>redis-6.2.0</code>到<code>/usr/local/</code>目录下</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui home]# cp -r redis-6.2.0/ /usr/local/
+[root@rui home]# ls /usr/local/
+bin  games    lib    libexec  redis-6.2.0  share
+etc  include  lib64  proc     sbin         src
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="文件移动-mv">文件移动 mv</h3>
+<ul>
+<li>移动文件夹/文件：<code>mv 要移动的文件夹或者是文件 目标路径</code></li>
+<li>移动文件<code>redis.conf</code>到<code>src</code>目录下</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# mv redis.conf src/
+[root@rui redis-6.2.0]# ls src/redis.conf 
+src/redis.conf
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="文件查找">文件查找</h3>
+<ul>
+<li>方式一：<code>find 要查找的路径 -name 要查找的文件</code></li>
+<li><code>find</code>会遍历指定路径下的所有文件，然后返回符合条件的，支持模糊查询</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# find ./ -name redis.c*
+./src/redis.conf
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>方式二：<code>locate 要查找的文件</code></li>
+<li><code>locate</code> 在<code>/var/lib/mlocate/</code>目录下存放着一个数据库文件，其实使用<code>locate</code>查询是查询的数据库，所以<code>locate</code>非常快</li>
+<li><code>locate</code>会返回所有包含文件名的文件</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/red
+/home/redis-6.2.0/src/redis-benchmark
+/home/redis-6.2.0/src/redis-benchmark.c
+/home/redis-6.2.0/src/redis-benchmark.d
+/home/redis-6.2.0/src/redis-benchmark.o
+/home/redis-6.2.0/src/redis-check-aof
+/home/redis-6.2.0/src/redis-check-aof.c
+/home/redis-6.2.0/src/redis-check-aof.d
+/home/redis-6.2.0/src/redis-check-aof.o
+/home/redis-6.2.0/src/redis-check-rdb
+/home/redis-6.2.0/src/redis-check-rdb.c
+/home/redis-6.2.0/src/redis-check-rdb.d
+/home/redis-6.2.0/src/redis-check-rdb.o
+/home/redis-6.2.0/src/redis-cli
+/home/redis-6.2.0/src/redis-cli.c
+/home/redis-6.2.0/src/redis-cli.d
+/home/redis-6.2.0/src/redis-cli.o
+/home/redis-6.2.0/src/redis-sentinel
+/home/redis-6.2.0/src/redis-server
+/home/redis-6.2.0/src/redis-trib.rb
+/home/redis-6.2.0/src/redis.conf
+/home/redis-6.2.0/src/redisassert.h
+/home/redis-6.2.0/src/redismodule.h
+</code></pre></td></tr></table>
+</div>
+</div><p>然后新建一个文件，再查询一次</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# &gt; /home/redis-6.2.0/src/testfile
+[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/testf
+[root@rui redis-6.2.0]# ll /home/redis-6.2.0/src/testfile 
+-rw-r--r--. 1 root root 0 Apr 10 22:37 /home/redis-6.2.0/src/testfile
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到，没有查到，因为<code>locate</code>的数据库不是实时更新的，可以使用<code>updatedb</code>手动更新，也可以把更新命令配置到系统的任务计划表，定时执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# updatedb
+[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/testf
+/home/redis-6.2.0/src/testfile
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到更新之后就查到了</p>
+<h2 id="vim相关"><code>vim</code>相关</h2>
+<h3 id="进入编辑模式">进入编辑模式</h3>
+<ul>
+<li>按<code>i</code>进入编辑模式后光标会在当前位置</li>
+<li>按<code>I</code>进入编辑模式后光标会在当前行行首</li>
+<li>按<code>a</code>进入编辑模式后，光标在当前字符后</li>
+<li>按<code>A</code>进入编辑模式后，光标会在当前行行尾</li>
+<li>按<code>o</code>进入编辑模式后，会在当前行下一行新开一行</li>
+<li>按<code>O</code>进入编辑模式后，会在当前行上一行新开一行</li>
+</ul>
+<p><code>我用的最多的是i</code></p>
+<h3 id="退出编辑模式">退出编辑模式</h3>
+<ul>
+<li>按<code>ESC</code>退出编辑模式</li>
+</ul>
+<h3 id="查找">查找</h3>
+<ul>
+<li>使用：<code>/要查找的内容</code></li>
+<li>使用<code>vim /文件名</code>打开文件后，输入<code>/</code>要查找的内容即可，比如下面我要在<code>redis.conf</code>配置文件中查找<code>bind</code>关键字</li>
+</ul>
+<a class="lightgallery" href="/img/image-20210410145934938.png" title="/img/image-20210410145934938.png" data-thumbnail="/img/image-20210410145934938.png">
+        
+    </a>
+<ul>
+<li>
+<p>然后可以输入回车，会查找到该文件中第一个<code>bind</code>，可以输入<code>n</code>定位到下一个，输入<code>N</code>定位到上一个</p>
+</li>
+<li>
+<p>取消高亮可以输入<code>nohlsearch</code>，简写为<code>noh</code>，也可以输入<code>set nohlsearch</code> ，简写为<code>set noh</code></p>
+</li>
+</ul>
+<h3 id="替换">替换</h3>
+<ul>
+<li>
+<p>把文件中的所有<code>127.0.0.1</code>替换为<code>120.5.5.153</code></p>
+<ul>
+<li>使用：<code>:%s/127.0.0.1/120.5.5.153/g</code></li>
+</ul>
+</li>
+<li>
+<p>把当前行的<code>127.0.0.1</code>替换为<code>120.5.5.153</code></p>
+<ul>
+<li>使用：<code>:S/127.0.0.1/120.5.5.153/g</code></li>
+</ul>
+</li>
+</ul>
+<p><code>还有很多替换相关的命令，这里只是写了常用的</code></p>
+<h3 id="退出">退出</h3>
+<ul>
+<li>退出不保存<code>:q</code></li>
+<li>强制退出不保存<code>:q!</code></li>
+<li>保存并退出<code>:wq</code></li>
+<li>强制保存并退出<code>:wq!</code></li>
+</ul>
+<h2 id="日志查看">日志查看</h2>
+<h3 id="实时刷新查看日志">实时刷新查看日志</h3>
+<ul>
+<li>方式一：使用：<code>tail -f -n 10 日志文件名称</code>
+<ul>
+<li><code>-f</code>：实时刷新</li>
+<li><code>-n</code>：行数关键字，后面跟行数，表示从后10行开始查看</li>
+</ul>
+</li>
+<li>方式二：使用：<code>tailf 日志文件名称</code>
+<ul>
+<li>默认从后十行开始查看</li>
+</ul>
+</li>
+</ul>
+<h3 id="查看日志前10行">查看日志前10行</h3>
+<ul>
+<li>使用：<code>head -n 行数 日志文件名称</code>
+<ul>
+<li><code>-n</code> ：行数关键字</li>
+</ul>
+</li>
+</ul>
+<h3 id="查看第10行到第20行">查看第10行到第20行</h3>
+<ul>
+<li>方式一：使用：<code>sed -n '10,20p' 日志文件名称</code>
+<ul>
+<li><code>-n</code>：打印制定行</li>
+<li><code>'10,20p'</code>：指定的行号</li>
+</ul>
+</li>
+<li>方式二：使用：<code>cat -n 日志文件名称 | head -n 20 | tail -n +10</code>
+<ul>
+<li><code>cat -n</code>：打印日志显示行号</li>
+<li><code>head -n 20</code>：打印到20行</li>
+<li><code>tail -n +10</code>：从第10行开始打印</li>
+</ul>
+</li>
+</ul>
+]]></description>
 </item><item>
     <title>第一篇文章</title>
-    <link>https://ongrui.github.io/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</link>
+    <link>https://testoai.github.io/posts/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</link>
     <pubDate>Sun, 04 Apr 2021 00:00:00 &#43;0800</pubDate>
     <author>作者</author>
-    <guid>https://ongrui.github.io/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</guid>
-    <description><![CDATA[第一篇文章 写点儿啥呢 这两天一直在弄博客，昨天弄了一天icon， hugo的文档有点儿多，没找到config.toml的说明文档 [手动笑哭] 最后]]></description>
+    <guid>https://testoai.github.io/posts/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</guid>
+    <description><![CDATA[<h1 id="第一篇文章">第一篇文章</h1>
+<p>写点儿啥呢</p>
+<p>这两天一直在弄博客，昨天弄了一天icon，</p>
+<p>hugo的文档有点儿多，没找到config.toml的说明文档 [手动笑哭]</p>
+<p>最后各种Google，昨晚终于弄好了</p>
+<p>其实昨天一直边玩儿边搞，在家弄效率是不太高 ^_^</p>
+<p>但是这个为啥不兼容markdown的表情 ToT</p>
+<p>今天是清明节，本来打算回家&hellip;，改到五一假期再回吧</p>
+<p>祝自个儿下周二顺利吧</p>
+<p>开始学习&hellip;</p>
+]]></description>
 </item></channel>
 </rss>
