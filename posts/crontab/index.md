@@ -1,4 +1,4 @@
-# ctontab
+# crontab
 
 
 ## 作用
