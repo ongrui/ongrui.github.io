@@ -9,11 +9,25 @@
     <pubDate>Sun, 18 Apr 2021 00:00:00 &#43;0800</pubDate>
     <author>作者</author>
     <guid>https://testoai.github.io/posts/crontab/</guid>
-    <description><![CDATA[<h2 id="作用">作用</h2>
+    <description><![CDATA[<h2 id="介绍">介绍</h2>
 <p><code>crontab</code>在<code>Linux</code>系统中用于执行定时任务，比如服务巡检，日志备份清理，数据库备份</p>
-<p>在<code>Centos7</code>中，最小安装会有该服务，服务名是<code>crond</code></p>
+<p>在<code>Centos7</code>中，最小安装会有该服务，进程名是<code>crond</code></p>
 <p><code>Crontab</code>的任务管理在<code>/etc</code>目录下的<code>crontab</code>文件中</p>
 <h2 id="crontab文件详解"><code>crontab</code>文件详解</h2>
+<ul>
+<li>
+<p>1.<code>/var/spool/cron/</code>：该目录存放着每个用户设置的任务，文件以用户名命名</p>
+</li>
+<li>
+<p>2.<code>/var/log/cron</code>：该文件是<code>crontab</code>的日志文件，当任务执行没有成功时可以查看该日志排查</p>
+</li>
+<li>
+<p>3.<code>/etc/crontab</code>：</p>
+<ul>
+<li>该文件用来管理定时任务，默认有<code>root</code>用户可以编辑可以修改权限给其他用户编辑，但是刷新配置时依然只能<code>root</code>用户来刷新，而且该任务只属于<code>root</code>用户</li>
+</ul>
+</li>
+</ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -124,6 +138,23 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>上面的例子是每两分钟同步一次<code>s1a.time.edu.cn</code>的时间</p>
+<h2 id="crontab的环境变量">crontab的环境变量</h2>
+<p><code>crontab</code>默认不会加载用户和系统设置的环境变量，所以一些命令在终端可以执行但是在<code>crontab</code>执行不了</p>
+<ul>
+<li>解决方法
+<ul>
+<li>1.在<code>crontab</code>添加任务时写绝对路径</li>
+<li>2.把刷新环境变量的命令添加到<code>crontab</code>中，只适用于<code>root</code>用户</li>
+<li>3.可以在对应的任务之前添加一段使系统环境变量生效的命令</li>
+<li>4.可以把要执行的文件所在目录添加到<code>PATH</code>中</li>
+</ul>
+</li>
+</ul>
+<h2 id="crontab相关命令">crontab相关命令</h2>
+<p><code>crontab -l</code>：列出当前用户的所有任务</p>
+<p><code>crontab -e</code>：编辑当前用户的任务，上面说普通用户没有办法把任务加到<code>/etc/crontab</code>中，但是可以使用这条命令添加属于自己的任务，格式与<code>/etc/crontab</code>相同</p>
+<p><code>crontab /etc/crontab</code>：用于<code>root</code>用户编辑完<code>/etc/crontab</code>后刷新任务列表</p>
+<p><code>crontab -r</code>：删除当前用户的所有任务，<strong><u>注意是删除所有，慎用</u></strong></p>
 ]]></description>
 </item><item>
     <title>linux(Centos7)相关命令 持续更新...</title>
@@ -345,7 +376,7 @@ src/redis.conf
 <li>保存并退出<code>:wq</code></li>
 <li>强制保存并退出<code>:wq!</code></li>
 </ul>
-<h2 id="日志查看">日志查看</h2>
+<h2 id="查看日志">查看日志</h2>
 <h3 id="实时刷新查看日志">实时刷新查看日志</h3>
 <ul>
 <li>方式一：使用：<code>tail -f -n 10 日志文件名称</code>
@@ -384,6 +415,31 @@ src/redis.conf
 </ul>
 </li>
 </ul>
+<p>2021.04.20</p>
+<h2 id="查看进程">查看进程</h2>
+<h3 id="ps命令">ps命令</h3>
+<p>ps （英文全拼：process status）命令用于显示当前进程的状态 &ndash;摘自菜鸟教程</p>
+<h4 id="参数">参数</h4>
+<ul>
+<li>-a：列出所有进程</li>
+<li>-w：显示加宽，可以显示更多内容</li>
+<li>-u：以用户为主的进程状态</li>
+<li>-x：显示当前用户在所有终端下的进程信息，通常和参数<code>a</code>一起使用</li>
+<li>-e：显示系统内所有的进程信息</li>
+<li>-l：使用长格式显示进程信息</li>
+<li>-f：使用完整的格式显示进程信息</li>
+</ul>
+<h4 id="筛选">筛选</h4>
+<ul>
+<li>在输入了上面命令后添加<code>|grep processName/processID</code></li>
+</ul>
+<h3 id="根据进程查找文件">根据进程查找文件</h3>
+<ul>
+<li>当因为某种原因找不到服务的存放位置时，可以使用上面的命令先查看进程的ID</li>
+<li>然后使用命令：<code>pwdx processID</code>命令查找该进程文件存放的位置</li>
+</ul>
+<h2 id="查看端口号是否被监听">查看端口号是否被监听</h2>
+<p><code>lsof -i:prot</code></p>
 ]]></description>
 </item></channel>
 </rss>

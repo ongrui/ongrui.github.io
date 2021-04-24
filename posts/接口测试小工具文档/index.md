@@ -48,9 +48,10 @@ case1: '{
             "file":"C:/Users/rui/Pictures/Saved Pictures/test.png",
             "file1":"C:/Users/rui/Pictures/Saved Pictures/test.png"
         },
-        respParams:{
+        "respParams":{
             "data,token_type&data,access_token":"case3,header,Authorization"
-        }
+        },
+        ""
     }'
 ```
 

@@ -57,6 +57,7 @@
 </span><span class="lnt">28
 </span><span class="lnt">29
 </span><span class="lnt">30
+</span><span class="lnt">31
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">case1</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{
@@ -85,9 +86,10 @@
 </span><span class="s1">            &#34;file&#34;:&#34;C:/Users/rui/Pictures/Saved Pictures/test.png&#34;,
 </span><span class="s1">            &#34;file1&#34;:&#34;C:/Users/rui/Pictures/Saved Pictures/test.png&#34;
 </span><span class="s1">        },
-</span><span class="s1">        respParams:{
+</span><span class="s1">        &#34;respParams&#34;:{
 </span><span class="s1">            &#34;data,token_type&amp;data,access_token&#34;:&#34;case3,header,Authorization&#34;
-</span><span class="s1">        }
+</span><span class="s1">        },
+</span><span class="s1">        &#34;&#34;
 </span><span class="s1">    }&#39;</span><span class="w">
 </span></code></pre></td></tr></table>
 </div>
@@ -167,7 +169,7 @@
     <description><![CDATA[<ul>
 <li>开篇啰嗦</li>
 </ul>
-<p>这篇废话太多了，做完了新开一篇总结的</p>
+<p>这篇废话太多了，写的也太乱了，做完了新开一篇总结的</p>
 <p>之前也写过接口测试工具，不过测试数据是放到Excel里面维护的</p>
 <p>前段时间和两个测试大佬聊，他们好像不太看好把测试数据维护到Excel里面</p>
 <p>所以现在利用业余时间重新做一个，把数据放到配置文件里面</p>
@@ -175,14 +177,20 @@
 <p>啥时候有雏形的时候就放到<code>github</code>上去</p>
 <h2 id="20210417-1240更新">2021.04.17 12:40更新</h2>
 <h2 id="已经完成的">已经完成的</h2>
+<p>2021.04.17 12:40</p>
 <ul>
 <li>1.读取配置文件</li>
 <li>2.发送请求</li>
 <li>3.把指定的返回值拼接到指定的<code>KEY</code>上</li>
 </ul>
-<h2 id="下一步的计划">下一步的计划</h2>
+<p>2021.04.24</p>
 <ul>
-<li>1.对指定的返回值做判断</li>
+<li>4.对指定的返回值做判断</li>
+</ul>
+<h2 id="下一步的计划">下一步的计划</h2>
+<p>2021.04.17 12:40</p>
+<ul>
+<li><del>1.对指定的返回值做判断</del></li>
 <li>2.写一个日志模块</li>
 <li>3.把<code>case</code>的<code>val</code>换成<code>yaml</code>格式的（这周看到了一个yaml的详细教程，不是不好解析，而是我不会😓）</li>
 </ul>
