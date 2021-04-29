@@ -3,10 +3,10 @@
         <title>安全测试 - 标签 - 菜狗瑞的学习周记</title>
         <link>https://testoai.github.io/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</link>
         <description>安全测试 - 标签 - 菜狗瑞的学习周记</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 23 Apr 2021 09:43:23 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 29 Apr 2021 09:43:23 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="self" type="application/rss+xml" /><item>
     <title>安全测试之-SQL注入</title>
     <link>https://testoai.github.io/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B-sql%E6%B3%A8%E5%85%A5/</link>
-    <pubDate>Fri, 23 Apr 2021 09:43:23 &#43;0800</pubDate>
+    <pubDate>Thu, 29 Apr 2021 09:43:23 &#43;0800</pubDate>
     <author>作者</author>
     <guid>https://testoai.github.io/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B-sql%E6%B3%A8%E5%85%A5/</guid>
     <description><![CDATA[<h2 id="什么是sql注入">什么是<code>SQL</code>注入</h2>

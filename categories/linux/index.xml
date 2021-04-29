@@ -432,14 +432,44 @@ src/redis.conf
 <h4 id="筛选">筛选</h4>
 <ul>
 <li>在输入了上面命令后添加<code>|grep processName/processID</code></li>
+<li><code>ps -aux |grep mysql</code></li>
 </ul>
 <h3 id="根据进程查找文件">根据进程查找文件</h3>
 <ul>
-<li>当因为某种原因找不到服务的存放位置时，可以使用上面的命令先查看进程的ID</li>
-<li>然后使用命令：<code>pwdx processID</code>命令查找该进程文件存放的位置</li>
+<li>
+<p>当因为某种原因找不到服务的存放位置时，可以使用上面的命令先查看进程的ID</p>
+</li>
+<li>
+<p>然后使用命令：<code>pwdx processID</code>命令查找该进程文件存放的位置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>root@rabbitmq1 redis<span class="o">]</span><span class="c1"># ps -aux |grep redis</span>
+redis     <span class="m">4356</span>  0.1  2.3 <span class="m">323184</span> <span class="m">133272</span> ?       Ssl  4月19  25:12 /usr/bin/redis-server *:6379
+root      <span class="m">7194</span>  0.0  0.0 <span class="m">112736</span>   <span class="m">996</span> pts/1    S+   11:23   0:00 grep --color<span class="o">=</span>auto redis
+<span class="o">[</span>root@rabbitmq1 redis<span class="o">]</span><span class="c1"># pwdx 4356</span>
+4356: /var/lib/redis
+</code></pre></td></tr></table>
+</div>
+</div></li>
 </ul>
 <h2 id="查看端口号是否被监听">查看端口号是否被监听</h2>
-<p><code>lsof -i:prot</code></p>
-]]></description>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>root@pacs local<span class="o">]</span><span class="c1"># ss -tunlp |grep 3306</span>
+tcp    LISTEN     <span class="m">0</span>      <span class="m">128</span>       *:3306      *:*    users:<span class="o">((</span><span class="s2">&#34;docker-proxy&#34;</span>,pid<span class="o">=</span>28320,fd<span class="o">=</span>4<span class="o">))</span>
+</code></pre></td></tr></table>
+</div>
+</div>]]></description>
 </item></channel>
 </rss>

@@ -197,14 +197,29 @@ ps （英文全拼：process status）命令用于显示当前进程的状态 --
 #### 筛选
 
 - 在输入了上面命令后添加`|grep processName/processID`
+- `ps -aux |grep mysql`
 
 ### 根据进程查找文件
 
 - 当因为某种原因找不到服务的存放位置时，可以使用上面的命令先查看进程的ID
+
 - 然后使用命令：`pwdx processID`命令查找该进程文件存放的位置
+
+  ```shell
+  [root@rabbitmq1 redis]# ps -aux |grep redis
+  redis     4356  0.1  2.3 323184 133272 ?       Ssl  4月19  25:12 /usr/bin/redis-server *:6379
+  root      7194  0.0  0.0 112736   996 pts/1    S+   11:23   0:00 grep --color=auto redis
+  [root@rabbitmq1 redis]# pwdx 4356
+  4356: /var/lib/redis
+  ```
 
 ## 查看端口号是否被监听
 
-`lsof -i:prot`
+```shell
+[root@pacs local]# ss -tunlp |grep 3306
+tcp    LISTEN     0      128       *:3306      *:*    users:(("docker-proxy",pid=28320,fd=4))
+```
+
+
 
 
