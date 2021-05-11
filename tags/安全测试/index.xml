@@ -10,7 +10,7 @@
     <author>作者</author>
     <guid>https://testoai.github.io/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B-sql%E6%B3%A8%E5%85%A5/</guid>
     <description><![CDATA[<h2 id="什么是sql注入">什么是<code>SQL</code>注入</h2>
-<p>在没有对没有对输入参数进行校验的情况下，请求方可以向参数中添加一些影响SQL的字符，导致程序直接用请求者传入的参数去数据库查询，会导致原有的SQL被修改，不能按预期返回</p>
+<p>当被测程序没有对没有对输入参数进行校验的情况下，请求方可以向参数中添加一些影响SQL的字符，导致程序直接用请求者传入的参数去数据库查询，会导致原有的SQL被修改，不能按预期执行</p>
 <h2 id="sql注入示例"><code>SQL</code>注入示例</h2>
 <p>比如一个查询接口，查询指定时间段内的数据</p>
 <div class="highlight"><div class="chroma">

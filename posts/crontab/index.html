@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/testoai.github.io\/posts\/crontab\/"
-        },"genre": "posts","keywords": "linux","wordcount":  1539 ,
+        },"genre": "posts","keywords": "linux","wordcount":  1472 ,
         "url": "https:\/\/testoai.github.io\/posts\/crontab\/","datePublished": "2021-04-18T00:00:00+08:00","dateModified": "2021-04-18T00:00:00+08:00","publisher": {
             "@type": "Organization",
             "name": "xxxx","logo": "https:\/\/testoai.github.io\/img\/logo.png"},"author": {
@@ -111,8 +111,8 @@
                 
                 
                 <span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>作者</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw"></i>linux</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-04-18">2021-04-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1539 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-04-18">2021-04-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1472 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -140,7 +140,6 @@
             </div><div class="content" id="content"><h2 id="介绍">介绍</h2>
 <p><code>crontab</code>在<code>Linux</code>系统中用于执行定时任务，比如服务巡检，日志备份清理，数据库备份</p>
 <p>在<code>Centos7</code>中，最小安装会有该服务，进程名是<code>crond</code></p>
-<p><code>Crontab</code>的任务管理在<code>/etc</code>目录下的<code>crontab</code>文件中</p>
 <h2 id="crontab文件详解"><code>crontab</code>文件详解</h2>
 <ul>
 <li>
@@ -150,10 +149,7 @@
 <p>2.<code>/var/log/cron</code>：该文件是<code>crontab</code>的日志文件，当任务执行没有成功时可以查看该日志排查</p>
 </li>
 <li>
-<p>3.<code>/etc/crontab</code>：</p>
-<ul>
-<li>该文件用来管理定时任务，默认有<code>root</code>用户可以编辑可以修改权限给其他用户编辑，但是刷新配置时依然只能<code>root</code>用户来刷新，而且该任务只属于<code>root</code>用户</li>
-</ul>
+<p>3.<code>/etc/crontab</code>：该文件用来管理定时任务，默认有<code>root</code>用户可以编辑可以修改权限给其他用户编辑</p>
 </li>
 </ul>
 <div class="highlight"><div class="chroma">
@@ -194,7 +190,7 @@
 <ul>
 <li><code>SHELL=/bin/bash</code>：表示使用<code>/bin/bash</code>解释命令</li>
 <li><code>PATH=/sbin:/bin:/usr/sbin:/usr/bin</code>：表示到哪些目录寻找命令执行程序</li>
-<li><code>MAILTO</code>：当有任务执行有输出时，输出内容将发送到那个用户的邮箱，为空则不发送</li>
+<li><code>MAILTO</code>：当某个任务执行有输出时，输出内容将发送到那个用户的邮箱，为空则不发送</li>
 </ul>
 <h3 id="底部定时任务配置部分">底部定时任务配置部分</h3>
 <ul>
@@ -232,7 +228,7 @@
 <p>特殊符号：</p>
 <ul>
 <li><code>*</code>：代表规则范围内的任意值，如果设置该值的是分钟，则在满足其他条件下的情况下，每分钟都会执行</li>
-<li><code>,</code>：将指定的值隔开，如在分钟中使用，<code>1,18,23</code>，在满足其他条件情况下，在1、18、23分钟是都会执行</li>
+<li><code>,</code>：将指定的值隔开，如在分钟中使用，<code>1,18,23</code>，在满足其他条件情况下，在1、18、23分钟都会执行</li>
 <li><code>-</code>：用于指定取值范围，如在分钟中使用，<code>1-5</code>，则表示的是1、2、3、4、5分钟</li>
 <li><code>/</code>：用于指定时间的执行频率，如在分钟中使用，<code>0-30/2</code>，则表示的是在30分钟之内，每隔两分钟执行一次</li>
 </ul>
@@ -309,7 +305,7 @@
     <div class="post-nav"><a href="/posts/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B0%8F%E5%B7%A5%E5%85%B7%E6%96%87%E6%A1%A3/" class="prev" rel="prev" title="接口测试小工具文档"><i class="fas fa-angle-left fa-fw"></i>接口测试小工具文档</a>
             <a href="/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B-sql%E6%B3%A8%E5%85%A5/" class="next" rel="next" title="安全测试之-SQL注入">安全测试之-SQL注入<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
-</article></div>
+<div id="comments"></div></article></div>
             </main><footer class="footer">
         <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span>&nbsp;|&nbsp;<span class="license">菜狗瑞的学习周记</span></div>
         </div>
