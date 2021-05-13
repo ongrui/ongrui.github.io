@@ -5,13 +5,11 @@
 
 啥时候更新时间间隔超过三个月我就把持续更新去掉
 
-话说作为一个测试，第一篇文章是不是应该得是测试相关的
+话说作为一个测试，是不是应该先记录测试相关的
 
 唉，在公司学的最多的就是linux
 
 先写这个吧，明天再写一篇测试相关的
-
-下面都是我目前能想到或工作中常用的
 
 ## 文件操作相关
 
@@ -105,6 +103,68 @@ src/redis.conf
 ```
 
 可以看到更新之后就查到了
+
+2021-05-13：
+
+### 文件权限相关
+
+```
+[root@rui nginx]# ll
+total 12
+drwx------ 2 root root    6 Mar  8 11:49 client_body_temp
+drwxr-xr-x 2 root root 4096 May 10 11:39 conf
+drwx------ 2 root root    6 Mar  8 11:49 fastcgi_temp
+drwxr-xr-x 2 root root   38 Mar  8 10:50 html
+drwxr-xr-x 2 root root   55 Mar 29 10:01 logs
+-rw-r--r-- 1 root root 4796 May 11 20:14 nginx.conf
+drwx------ 3 root root   14 Apr 29 10:04 proxy_temp
+drwxr-xr-x 2 root root   18 Mar  8 10:50 sbin
+drwx------ 2 root root    6 Mar  8 11:49 scgi_temp
+drwx------ 2 root root    6 Mar  8 11:49 uwsgi_temp
+```
+
+- total 12
+
+  linux的数据存储是以块（block）为单位的，块可以理解成一个容器，每个块的大小可以用`getconf PAGESIZE`命令查看
+
+  每个块的容量是4096B，也就是4K
+
+```go
+drwx------ 2 root root    6 Mar  8 11:49 client_body_temp
+```
+
+`drwx------`
+
+- d：表示文件夹，如果是-，则代表是文件
+
+- r：表示有可读权限，用数字表示为4
+
+- w：表示有可写权限，用数字表示为2
+
+- x：表示有可执行权限，用数字表示为1
+
+- rwx：文件权限
+
+  - 一个rwx可以理解为为一组权限，一个文件有三组，第一组为文件所属用户，第二组为所属用户组内的其他用户，第三组为其他用户
+  - 如果显示为"-"符号则表示没有权限
+
+  - 设置权限可以使用`chmod` 
+
+  `chmod 741 filename`
+
+  - 741：
+    - 文件所属用户有该文件的可读、可写、可执行权限
+    - 文件所属用户组内的其它用户有该文件的可读权限
+    - 其他用户有该文件的可执行权限
+
+`drwx------ 2 root root 6 Mar  8 11:49 client_body_temp`
+
+- 2：硬连接个数
+- 第一个root：文件所属用户
+- 第二个root：文件所属用户的组
+- 6：文件大小
+- Mar  8 11:49：最后修改时间
+- client_body_temp：文件名/目录名
 
 ## `vim`相关
 

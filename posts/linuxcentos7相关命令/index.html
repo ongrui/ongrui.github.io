@@ -6,7 +6,7 @@
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
         <title>linux(Centos7)相关命令 持续更新... - 菜狗瑞的学习周记</title><meta name="Description" content="关于 LoveIt 主题"><meta property="og:title" content="linux(Centos7)相关命令 持续更新..." />
-<meta property="og:description" content="开篇啰嗦 啥时候更新时间间隔超过三个月我就把持续更新去掉 话说作为一个测试，第一篇文章是不是应该得是测试相关的 唉，在公司学的最多的就是linux" />
+<meta property="og:description" content="开篇啰嗦 啥时候更新时间间隔超过三个月我就把持续更新去掉 话说作为一个测试，是不是应该先记录测试相关的 唉，在公司学的最多的就是linux 先写这个" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://testoai.github.io/posts/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/" /><meta property="og:image" content="https://testoai.github.io/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2021-04-10T00:00:00&#43;08:00" />
@@ -16,7 +16,7 @@
 <meta name="twitter:image" content="https://testoai.github.io/logo.png"/>
 
 <meta name="twitter:title" content="linux(Centos7)相关命令 持续更新..."/>
-<meta name="twitter:description" content="开篇啰嗦 啥时候更新时间间隔超过三个月我就把持续更新去掉 话说作为一个测试，第一篇文章是不是应该得是测试相关的 唉，在公司学的最多的就是linux"/>
+<meta name="twitter:description" content="开篇啰嗦 啥时候更新时间间隔超过三个月我就把持续更新去掉 话说作为一个测试，是不是应该先记录测试相关的 唉，在公司学的最多的就是linux 先写这个"/>
 <meta name="application-name" content="LoveIt">
 <meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/img/001.ico"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://testoai.github.io/posts/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/" /><link rel="prev" href="https://testoai.github.io/posts/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" /><link rel="next" href="https://testoai.github.io/posts/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
     {
@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/testoai.github.io\/posts\/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4\/"
-        },"genre": "posts","keywords": "linux","wordcount":  1729 ,
+        },"genre": "posts","keywords": "linux","wordcount":  2261 ,
         "url": "https:\/\/testoai.github.io\/posts\/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4\/","datePublished": "2021-04-10T00:00:00+08:00","dateModified": "2021-04-10T00:00:00+08:00","publisher": {
             "@type": "Organization",
             "name": "xxxx","logo": "https:\/\/testoai.github.io\/img\/logo.png"},"author": {
@@ -111,8 +111,8 @@
                 
                 
                 <span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>作者</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw"></i>linux</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-04-10">2021-04-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1729 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-04-10">2021-04-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2261 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -125,6 +125,7 @@
         <li><a href="#文件拷贝-cp">文件拷贝 cp</a></li>
         <li><a href="#文件移动-mv">文件移动 mv</a></li>
         <li><a href="#文件查找">文件查找</a></li>
+        <li><a href="#文件权限相关">文件权限相关</a></li>
       </ul>
     </li>
     <li><a href="#vim相关"><code>vim</code>相关</a>
@@ -159,10 +160,9 @@
 </nav></div>
             </div><div class="content" id="content"><h1 id="开篇啰嗦">开篇啰嗦</h1>
 <p>啥时候更新时间间隔超过三个月我就把持续更新去掉</p>
-<p>话说作为一个测试，第一篇文章是不是应该得是测试相关的</p>
+<p>话说作为一个测试，是不是应该先记录测试相关的</p>
 <p>唉，在公司学的最多的就是linux</p>
 <p>先写这个吧，明天再写一篇测试相关的</p>
-<p>下面都是我目前能想到或工作中常用的</p>
 <h2 id="文件操作相关">文件操作相关</h2>
 <h3 id="文件拷贝-cp">文件拷贝 cp</h3>
 <ul>
@@ -317,6 +317,101 @@ src/redis.conf
 </code></pre></td></tr></table>
 </div>
 </div><p>可以看到更新之后就查到了</p>
+<p>2021-05-13：</p>
+<h3 id="文件权限相关">文件权限相关</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">[root@rui nginx]# ll
+total 12
+drwx------ 2 root root    6 Mar  8 11:49 client_body_temp
+drwxr-xr-x 2 root root 4096 May 10 11:39 conf
+drwx------ 2 root root    6 Mar  8 11:49 fastcgi_temp
+drwxr-xr-x 2 root root   38 Mar  8 10:50 html
+drwxr-xr-x 2 root root   55 Mar 29 10:01 logs
+-rw-r--r-- 1 root root 4796 May 11 20:14 nginx.conf
+drwx------ 3 root root   14 Apr 29 10:04 proxy_temp
+drwxr-xr-x 2 root root   18 Mar  8 10:50 sbin
+drwx------ 2 root root    6 Mar  8 11:49 scgi_temp
+drwx------ 2 root root    6 Mar  8 11:49 uwsgi_temp
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>total 12</p>
+<p>linux的数据存储是以块（block）为单位的，块可以理解成一个容器，每个块的大小可以用<code>getconf PAGESIZE</code>命令查看</p>
+<p>每个块的容量是4096B，也就是4K</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">drwx</span><span class="o">------</span> <span class="mi">2</span> <span class="nx">root</span> <span class="nx">root</span>    <span class="mi">6</span> <span class="nx">Mar</span>  <span class="mi">8</span> <span class="mi">11</span><span class="p">:</span><span class="mi">49</span> <span class="nx">client_body_temp</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>drwx------</code></p>
+<ul>
+<li>
+<p>d：表示文件夹，如果是-，则代表是文件</p>
+</li>
+<li>
+<p>r：表示有可读权限，用数字表示为4</p>
+</li>
+<li>
+<p>w：表示有可写权限，用数字表示为2</p>
+</li>
+<li>
+<p>x：表示有可执行权限，用数字表示为1</p>
+</li>
+<li>
+<p>rwx：文件权限</p>
+<ul>
+<li>
+<p>一个rwx可以理解为为一组权限，一个文件有三组，第一组为文件所属用户，第二组为所属用户组内的其他用户，第三组为其他用户</p>
+</li>
+<li>
+<p>如果显示为&quot;-&ldquo;符号则表示没有权限</p>
+</li>
+<li>
+<p>设置权限可以使用<code>chmod</code></p>
+</li>
+</ul>
+<p><code>chmod 741 filename</code></p>
+<ul>
+<li>741：
+<ul>
+<li>文件所属用户有该文件的可读、可写、可执行权限</li>
+<li>文件所属用户组内的其它用户有该文件的可读权限</li>
+<li>其他用户有该文件的可执行权限</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><code>drwx------ 2 root root 6 Mar  8 11:49 client_body_temp</code></p>
+<ul>
+<li>2：硬连接个数</li>
+<li>第一个root：文件所属用户</li>
+<li>第二个root：文件所属用户的组</li>
+<li>6：文件大小</li>
+<li>Mar  8 11:49：最后修改时间</li>
+<li>client_body_temp：文件名/目录名</li>
+</ul>
 <h2 id="vim相关"><code>vim</code>相关</h2>
 <h3 id="进入编辑模式">进入编辑模式</h3>
 <ul>
@@ -497,7 +592,9 @@ tcp    LISTEN     <span class="m">0</span>      <span class="m">128</span>      
     <div class="post-nav"><a href="/posts/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" class="prev" rel="prev" title="第一篇文章"><i class="fas fa-angle-left fa-fw"></i>第一篇文章</a>
             <a href="/posts/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/" class="next" rel="next" title="接口测试小工具">接口测试小工具<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
-<div id="comments"></div></article></div>
+<div id="comments"><div id="utterances"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">Utterances</a>.
+            </noscript></div></article></div>
             </main><footer class="footer">
         <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span>&nbsp;|&nbsp;<span class="license">菜狗瑞的学习周记</span></div>
         </div>
@@ -508,5 +605,5 @@ tcp    LISTEN     <span class="m">0</span>      <span class="m">128</span>      
             </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
                 <i class="fas fa-comment fa-fw"></i>
             </a>
-        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery.js@1.2.0/dist/css/lightgallery.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery.js@1.2.0/dist/js/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lg-thumbnail.js@1.2.0/dist/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lg-zoom.js@1.2.0/dist/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"lightGallery":{"actualSize":false,"exThumbImage":"data-thumbnail","hideBarsDelay":2000,"selector":".lightgallery","speed":400,"thumbContHeight":80,"thumbWidth":80,"thumbnail":true},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery.js@1.2.0/dist/css/lightgallery.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery.js@1.2.0/dist/js/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lg-thumbnail.js@1.2.0/dist/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lg-zoom.js@1.2.0/dist/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"","lightTheme":"github-light","repo":"ongrui/blogComment"}},"lightGallery":{"actualSize":false,"exThumbImage":"data-thumbnail","hideBarsDelay":2000,"selector":".lightgallery","speed":400,"thumbContHeight":80,"thumbWidth":80,"thumbnail":true},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
 </html>
