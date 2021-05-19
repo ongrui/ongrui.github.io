@@ -3,7 +3,87 @@
         <title>所有文章 - 菜狗瑞的学习周记</title>
         <link>https://testoai.github.io/posts/</link>
         <description>所有文章 | 菜狗瑞的学习周记</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 11 May 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 18 May 2021 15:22:23 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>工作记录之rabbitmq镜像集群部署(短篇)</title>
+    <link>https://testoai.github.io/posts/rabbitmq%E9%95%9C%E5%83%8F%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</link>
+    <pubDate>Tue, 18 May 2021 15:22:23 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://testoai.github.io/posts/rabbitmq%E9%95%9C%E5%83%8F%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</guid>
+    <description><![CDATA[<p>记录一次工作中搭建rabbitmq集群遇到的问题</p>
+<h2 id="rabbitmq是啥">rabbitmq是啥</h2>
+<p>erlang语言编写的开源的用来做消息队列的统</p>
+<h2 id="集群部署流程centos7">集群部署流程（centos7）</h2>
+<p>erlang部署略</p>
+<p>rabbitmq单节点部署略</p>
+<ul>
+<li>下载与自己服务器相应的包，我下载了一个Unix的包，然后日志提示读取磁盘信息错误，centos7下载el7的包即可</li>
+</ul>
+<p>192.168.1.10</p>
+<p>192.168.1.11</p>
+<p>192.168.1.12</p>
+<p>配置集群</p>
+<p>10为主节点</p>
+<ul>
+<li>1.在/etc/hosts文件中配置三台机器的主机名和IP映射，三台服务器都要配置</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">192.168.1.10 mqa
+
+192.168.1.11 mqb
+
+192.168.1.12 mqc
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>2.修改/var/lib/rabbitmq/.erlang.cookie文件中的内容，需要三台服务器一致</p>
+<p>该文件其他人的权限必须是0</p>
+</li>
+<li>
+<p>3.在mqb和mqc执行下面命令添加到mqa节点</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">systemctl start rabbitmq-server # 启动服务
+rabbitmqctl stop_app            # 停止rabbitmq应用
+rabbitmqctl reset               # 重置节点，该操作会删除该节点的集群信息，持久化信息，用户信息
+rabbitmqctl join_cluster rabbit@mqa # 将该节点添加到mqa节点下，mqa节点必须是开启状态
+rabbitmqctl start_app           # 启动rabbitmq应用
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>4.在主节点开启web管理插件</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">rabbitmq-plugins enable rabbitmq_management
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>5.在浏览器访问主节点IP+15672端口就能看到集群相关信息了</li>
+</ul>
+<p>写的很简单，过程很心酸😭</p>
+]]></description>
+</item><item>
     <title>Golang之Context</title>
     <link>https://testoai.github.io/posts/golang-context/</link>
     <pubDate>Tue, 11 May 2021 00:00:00 &#43;0800</pubDate>
