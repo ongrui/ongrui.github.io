@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>安全测试之-文件上传 - 菜狗瑞的学习周记</title><meta name="Description" content="关于 LoveIt 主题"><meta property="og:title" content="安全测试之-文件上传" />
+<meta property="og:description" content="文件上传漏洞 当文件上传点未对上传的文件进行严格的验证和过滤时，就容易造成任意文件上传，比如webshell文件 如果文件上传的目录没有限制执行" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://testoai.github.io/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" /><meta property="og:image" content="https://testoai.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-05-23T00:00:00&#43;08:00" />
+<meta property="article:modified_time" content="2021-05-23T00:00:00&#43;08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://testoai.github.io/logo.png"/>
+
+<meta name="twitter:title" content="安全测试之-文件上传"/>
+<meta name="twitter:description" content="文件上传漏洞 当文件上传点未对上传的文件进行严格的验证和过滤时，就容易造成任意文件上传，比如webshell文件 如果文件上传的目录没有限制执行"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/img/001.ico"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://testoai.github.io/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" /><link rel="prev" href="https://testoai.github.io/posts/rabbitmq%E9%95%9C%E5%83%8F%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "安全测试之-文件上传",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/testoai.github.io\/posts\/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0\/"
+        },"genre": "posts","keywords": "安全测试","wordcount":  1799 ,
+        "url": "https:\/\/testoai.github.io\/posts\/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0\/","datePublished": "2021-05-23T00:00:00+08:00","dateModified": "2021-05-23T00:00:00+08:00","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": "https:\/\/testoai.github.io\/img\/logo.png"},"author": {
+                "@type": "Person",
+                "name": "作者"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="菜狗瑞的学习周记"><span class="header-title-pre"><a href="/posts/" title="菜狗瑞的学习周记">菜狗瑞的学习周记</a></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="请输入要搜索的关键字" id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="菜狗瑞的学习周记"><span class="header-title-pre"><a href="/posts/" title="菜狗瑞的学习周记">菜狗瑞的学习周记</a></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="请输入要搜索的关键字" id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container">
+
+    <div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">安全测试之-文件上传</h1>
+
+        <div class="post-meta">
+            <div class="post-meta-line">
+                
+                
+                <span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>作者</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-05-23">2021-05-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1799 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#文件上传漏洞">文件上传漏洞</a></li>
+    <li><a href="#什么是webshell">什么是webshell</a></li>
+    <li><a href="#上传检测流程">上传检测流程</a></li>
+    <li><a href="#客户端检测绕过">客户端检测绕过</a>
+      <ul>
+        <li><a href="#前端javascript检测绕过">前端JavaScript检测绕过</a></li>
+      </ul>
+    </li>
+    <li><a href="#提交报文修改检测绕过">提交报文修改检测绕过</a></li>
+    <li><a href="#服务端检测绕过">服务端检测绕过</a>
+      <ul>
+        <li><a href="#mime类型检测绕过">MIME类型检测绕过</a></li>
+        <li><a href="#文件内容检测绕过">文件内容检测绕过</a></li>
+      </ul>
+    </li>
+    <li><a href="#文件上传小技巧">文件上传小技巧</a></li>
+    <li><a href="#解析漏洞">解析漏洞</a></li>
+    <li><a href="#绕过技巧">绕过技巧</a>
+      <ul>
+        <li><a href="#重绘图">重绘图</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="文件上传漏洞">文件上传漏洞</h2>
+<p>当文件上传点未对上传的文件进行严格的验证和过滤时，就容易造成任意文件上传，比如webshell文件</p>
+<p>如果文件上传的目录没有限制执行权限，导致上传的动态文件可以正常执行并且访问，即造成了文件上传漏洞</p>
+<h2 id="什么是webshell">什么是webshell</h2>
+<p>webshell简称网页后门，运行在web应用上的远程控制程序</p>
+<p>其实就是一个网页，由PHP、jsp、asp、asp.net等之类的web应用程序语言开发，但是webshell并不具备常见网页的功能，例如登录、注册、信息展示功能，一般会具备文件管理、端口扫描、提权、获取信息等功能。拥有较为完善功能的webshell称之为大马。功能简单的webshell称为小马</p>
+<h2 id="上传检测流程">上传检测流程</h2>
+<ul>
+<li>1.前端提交
+<ul>
+<li>JavaScript检测</li>
+<li>Flash AS检测</li>
+</ul>
+</li>
+<li>2.数据传输
+<ul>
+<li>WAF拦截</li>
+<li>IPS拦截</li>
+</ul>
+</li>
+<li>服务端处理
+<ul>
+<li>扩展名检测</li>
+<li>MIME TYPE检测（文件参数中的content-type）</li>
+<li>文件格式检测</li>
+<li>内容检测（同WAF/IDS）</li>
+</ul>
+</li>
+<li>写入文件系统
+<ul>
+<li>文件重命名</li>
+<li>杀毒软件查杀</li>
+</ul>
+</li>
+<li>访问文件
+<ul>
+<li>无执行权限</li>
+<li>未知位置</li>
+</ul>
+</li>
+</ul>
+<h2 id="客户端检测绕过">客户端检测绕过</h2>
+<ul>
+<li>
+<p>1.JavaScript检测：通过浏览器提交上传请求前，出发检测用JS脚本进行检测，如普通表单上传</p>
+</li>
+<li>
+<p>2.Flash AS脚本检测：上传用Flash中，提交上传请求前，触发检测用AS脚本进行检测</p>
+</li>
+<li>
+<p>3.APP上传检测：检测写在APP客户端代码中，或者所调用的HTML页面中</p>
+</li>
+<li>
+<p>客户端检测一般只检测文件扩展名</p>
+</li>
+<li>
+<p>客户端进行的检测可通过对客户端代码的修改或拦截请求修改报文即可绕过</p>
+</li>
+</ul>
+<h3 id="前端javascript检测绕过">前端JavaScript检测绕过</h3>
+<ul>
+<li>1.查看onchange、onsubmit等事件
+<ul>
+<li>onchange事件会在域的内容改变时发生</li>
+<li>onsubmit事件会在表单的确认按钮被点击时发生，如下图示例</li>
+</ul>
+</li>
+<li>2.删掉相关事件中的检测函数</li>
+</ul>
+<h2 id="提交报文修改检测绕过">提交报文修改检测绕过</h2>
+<ul>
+<li>1.先选择正常的文件进行上传</li>
+<li>2.然后对上传文件的包进行截获，修改，重新上传</li>
+<li>这种方法可以绕过前端检测</li>
+</ul>
+<h2 id="服务端检测绕过">服务端检测绕过</h2>
+<ul>
+<li>服务端监测点
+<ul>
+<li>1.文件扩展名</li>
+<li>2.MIME/TYPE类型，该参数是由浏览器自动生成的，根据上传时选择的文件的扩展名进行mime/type的选择</li>
+<li>3.文件内容</li>
+</ul>
+</li>
+</ul>
+<h3 id="mime类型检测绕过">MIME类型检测绕过</h3>
+<p>MIME(Multipurpose Interent Mail Extensions)是描述消息内容类型的因特网标准</p>
+<p>MIME消息能包含文本、图像、音频、视频以及其他应用程序专用的数据</p>
+<p>浏览器会自动根据上传的文件扩展名，对应到相应的MIME类型上</p>
+<ul>
+<li>常见的MIME TYPE白名单</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>扩展名</th>
+<th>MIME TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jpg</td>
+<td>image/jpeg</td>
+</tr>
+<tr>
+<td>png</td>
+<td>image/png</td>
+</tr>
+<tr>
+<td>txt</td>
+<td>text/plain</td>
+</tr>
+<tr>
+<td>zip</td>
+<td>application/zip</td>
+</tr>
+<tr>
+<td>doc</td>
+<td>application/msword</td>
+</tr>
+</tbody>
+</table>
+<h3 id="文件内容检测绕过">文件内容检测绕过</h3>
+<ul>
+<li>
+<p>1.简单文件头检测</p>
+<p>文件头是位于文件开头的一段承担一定任务的数据，一般都在开头部分</p>
+<p>文件头的其实部分中一般开头标记文件类型</p>
+<p>如GIF的文件头为GIF89a或GIF87a</p>
+</li>
+<li>
+<p>绕过：这种只对文件头部进行简单匹配的方法，可以通过在上传的文件前追加合法的文件头进行绕过</p>
+<p>如：<code>GIF89a&lt;?php phpinfo();?&gt;</code></p>
+</li>
+<li>
+<p>2.完整文件结构检测</p>
+<p>通过调用图像函数（如getimagesize/imagecreatefromgif/imagecreatefrompng），进行文件检测是否为图像，需要文件内容保持相对完整，所以无法通过上面追加头部起始字节的方法进行绕过</p>
+</li>
+<li>
+<p>绕过</p>
+<p>这种检测可以将图片文件与欲上传文件进行合并来绕过检测</p>
+<p>先搞一个小的图片文件，然后使用copy命令把要上传的非法文件进行合并，然后上传，就可以绕过完整文件检测了</p>
+</li>
+<li>
+<p>3.恶意文件内容检测</p>
+<p>检测提交的文件中是否包含webshell等数据</p>
+</li>
+</ul>
+<h2 id="文件上传小技巧">文件上传小技巧</h2>
+<ul>
+<li>
+<p>1.文件参数多为filename属性</p>
+<p>文件上传过程中，如果存在waf拦截一些扩展名，可以通过尝试多个filename属性</p>
+</li>
+<li>
+<p>2.目录可控时，可以尝试使用目录穿越的方法（../）</p>
+<p>目录可控：程序在指定路径下的指定后缀的文件禁止访问，这种情况下如果非法程序上传成功了，但是也无法执行的</p>
+<p>此时需要抓包，将filename属性添加上../，意思是上传到指定目录的上一级，这样访问上一级就能绕过该方式的控制了</p>
+</li>
+</ul>
+<h2 id="解析漏洞">解析漏洞</h2>
+<ul>
+<li>
+<p>1.IIS/Nginx+PHP fastcgi取值错误解析漏洞（配置错误）</p>
+<p>开启了cgi.fix_pathinfo，如果开启后，执行文件不存在，会继续查找上一级文件是否存在，</p>
+</li>
+</ul>
+<h2 id="绕过技巧">绕过技巧</h2>
+<h3 id="重绘图">重绘图</h3>
+<ul>
+<li>应用调用图片库对上传的文件进行了图像转换，所以即使将图片与文件合并，也会将尾部转换掉，无法使用前面的方法进行文件上传</li>
+<li>解决方法：
+<ul>
+<li>1.将正常图片用目标使用的图形库进行转换</li>
+<li>2.寻找转换前后两次未变的部分</li>
+<li>3.将未变部分替换为欲上传的webshell</li>
+<li>4.将替换后的文件进行图像转换，看是否转换后仍存在替换后部分</li>
+</ul>
+</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-05-23</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/">安全测试</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/rabbitmq%E9%95%9C%E5%83%8F%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" class="prev" rel="prev" title="工作记录之rabbitmq镜像集群部署(短篇)"><i class="fas fa-angle-left fa-fw"></i>工作记录之rabbitmq镜像集群部署(短篇)</a></div>
+</div>
+<div id="comments"><div id="utterances"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">Utterances</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span>&nbsp;|&nbsp;<span class="license">菜狗瑞的学习周记</span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery.js@1.2.0/dist/css/lightgallery.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery.js@1.2.0/dist/js/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lg-thumbnail.js@1.2.0/dist/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lg-zoom.js@1.2.0/dist/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"","lightTheme":"github-light","repo":"ongrui/blogComment"}},"lightGallery":{"actualSize":false,"exThumbImage":"data-thumbnail","hideBarsDelay":2000,"selector":".lightgallery","speed":400,"thumbContHeight":80,"thumbWidth":80,"thumbnail":true},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

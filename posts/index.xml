@@ -3,7 +3,194 @@
         <title>所有文章 - 菜狗瑞的学习周记</title>
         <link>https://testoai.github.io/posts/</link>
         <description>所有文章 | 菜狗瑞的学习周记</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 18 May 2021 15:22:23 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 23 May 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>安全测试之-文件上传</title>
+    <link>https://testoai.github.io/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</link>
+    <pubDate>Sun, 23 May 2021 00:00:00 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://testoai.github.io/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</guid>
+    <description><![CDATA[<h2 id="文件上传漏洞">文件上传漏洞</h2>
+<p>当文件上传点未对上传的文件进行严格的验证和过滤时，就容易造成任意文件上传，比如webshell文件</p>
+<p>如果文件上传的目录没有限制执行权限，导致上传的动态文件可以正常执行并且访问，即造成了文件上传漏洞</p>
+<h2 id="什么是webshell">什么是webshell</h2>
+<p>webshell简称网页后门，运行在web应用上的远程控制程序</p>
+<p>其实就是一个网页，由PHP、jsp、asp、asp.net等之类的web应用程序语言开发，但是webshell并不具备常见网页的功能，例如登录、注册、信息展示功能，一般会具备文件管理、端口扫描、提权、获取信息等功能。拥有较为完善功能的webshell称之为大马。功能简单的webshell称为小马</p>
+<h2 id="上传检测流程">上传检测流程</h2>
+<ul>
+<li>1.前端提交
+<ul>
+<li>JavaScript检测</li>
+<li>Flash AS检测</li>
+</ul>
+</li>
+<li>2.数据传输
+<ul>
+<li>WAF拦截</li>
+<li>IPS拦截</li>
+</ul>
+</li>
+<li>服务端处理
+<ul>
+<li>扩展名检测</li>
+<li>MIME TYPE检测（文件参数中的content-type）</li>
+<li>文件格式检测</li>
+<li>内容检测（同WAF/IDS）</li>
+</ul>
+</li>
+<li>写入文件系统
+<ul>
+<li>文件重命名</li>
+<li>杀毒软件查杀</li>
+</ul>
+</li>
+<li>访问文件
+<ul>
+<li>无执行权限</li>
+<li>未知位置</li>
+</ul>
+</li>
+</ul>
+<h2 id="客户端检测绕过">客户端检测绕过</h2>
+<ul>
+<li>
+<p>1.JavaScript检测：通过浏览器提交上传请求前，出发检测用JS脚本进行检测，如普通表单上传</p>
+</li>
+<li>
+<p>2.Flash AS脚本检测：上传用Flash中，提交上传请求前，触发检测用AS脚本进行检测</p>
+</li>
+<li>
+<p>3.APP上传检测：检测写在APP客户端代码中，或者所调用的HTML页面中</p>
+</li>
+<li>
+<p>客户端检测一般只检测文件扩展名</p>
+</li>
+<li>
+<p>客户端进行的检测可通过对客户端代码的修改或拦截请求修改报文即可绕过</p>
+</li>
+</ul>
+<h3 id="前端javascript检测绕过">前端JavaScript检测绕过</h3>
+<ul>
+<li>1.查看onchange、onsubmit等事件
+<ul>
+<li>onchange事件会在域的内容改变时发生</li>
+<li>onsubmit事件会在表单的确认按钮被点击时发生，如下图示例</li>
+</ul>
+</li>
+<li>2.删掉相关事件中的检测函数</li>
+</ul>
+<h2 id="提交报文修改检测绕过">提交报文修改检测绕过</h2>
+<ul>
+<li>1.先选择正常的文件进行上传</li>
+<li>2.然后对上传文件的包进行截获，修改，重新上传</li>
+<li>这种方法可以绕过前端检测</li>
+</ul>
+<h2 id="服务端检测绕过">服务端检测绕过</h2>
+<ul>
+<li>服务端监测点
+<ul>
+<li>1.文件扩展名</li>
+<li>2.MIME/TYPE类型，该参数是由浏览器自动生成的，根据上传时选择的文件的扩展名进行mime/type的选择</li>
+<li>3.文件内容</li>
+</ul>
+</li>
+</ul>
+<h3 id="mime类型检测绕过">MIME类型检测绕过</h3>
+<p>MIME(Multipurpose Interent Mail Extensions)是描述消息内容类型的因特网标准</p>
+<p>MIME消息能包含文本、图像、音频、视频以及其他应用程序专用的数据</p>
+<p>浏览器会自动根据上传的文件扩展名，对应到相应的MIME类型上</p>
+<ul>
+<li>常见的MIME TYPE白名单</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>扩展名</th>
+<th>MIME TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jpg</td>
+<td>image/jpeg</td>
+</tr>
+<tr>
+<td>png</td>
+<td>image/png</td>
+</tr>
+<tr>
+<td>txt</td>
+<td>text/plain</td>
+</tr>
+<tr>
+<td>zip</td>
+<td>application/zip</td>
+</tr>
+<tr>
+<td>doc</td>
+<td>application/msword</td>
+</tr>
+</tbody>
+</table>
+<h3 id="文件内容检测绕过">文件内容检测绕过</h3>
+<ul>
+<li>
+<p>1.简单文件头检测</p>
+<p>文件头是位于文件开头的一段承担一定任务的数据，一般都在开头部分</p>
+<p>文件头的其实部分中一般开头标记文件类型</p>
+<p>如GIF的文件头为GIF89a或GIF87a</p>
+</li>
+<li>
+<p>绕过：这种只对文件头部进行简单匹配的方法，可以通过在上传的文件前追加合法的文件头进行绕过</p>
+<p>如：<code>GIF89a&lt;?php phpinfo();?&gt;</code></p>
+</li>
+<li>
+<p>2.完整文件结构检测</p>
+<p>通过调用图像函数（如getimagesize/imagecreatefromgif/imagecreatefrompng），进行文件检测是否为图像，需要文件内容保持相对完整，所以无法通过上面追加头部起始字节的方法进行绕过</p>
+</li>
+<li>
+<p>绕过</p>
+<p>这种检测可以将图片文件与欲上传文件进行合并来绕过检测</p>
+<p>先搞一个小的图片文件，然后使用copy命令把要上传的非法文件进行合并，然后上传，就可以绕过完整文件检测了</p>
+</li>
+<li>
+<p>3.恶意文件内容检测</p>
+<p>检测提交的文件中是否包含webshell等数据</p>
+</li>
+</ul>
+<h2 id="文件上传小技巧">文件上传小技巧</h2>
+<ul>
+<li>
+<p>1.文件参数多为filename属性</p>
+<p>文件上传过程中，如果存在waf拦截一些扩展名，可以通过尝试多个filename属性</p>
+</li>
+<li>
+<p>2.目录可控时，可以尝试使用目录穿越的方法（../）</p>
+<p>目录可控：程序在指定路径下的指定后缀的文件禁止访问，这种情况下如果非法程序上传成功了，但是也无法执行的</p>
+<p>此时需要抓包，将filename属性添加上../，意思是上传到指定目录的上一级，这样访问上一级就能绕过该方式的控制了</p>
+</li>
+</ul>
+<h2 id="解析漏洞">解析漏洞</h2>
+<ul>
+<li>
+<p>1.IIS/Nginx+PHP fastcgi取值错误解析漏洞（配置错误）</p>
+<p>开启了cgi.fix_pathinfo，如果开启后，执行文件不存在，会继续查找上一级文件是否存在，</p>
+</li>
+</ul>
+<h2 id="绕过技巧">绕过技巧</h2>
+<h3 id="重绘图">重绘图</h3>
+<ul>
+<li>应用调用图片库对上传的文件进行了图像转换，所以即使将图片与文件合并，也会将尾部转换掉，无法使用前面的方法进行文件上传</li>
+<li>解决方法：
+<ul>
+<li>1.将正常图片用目标使用的图形库进行转换</li>
+<li>2.寻找转换前后两次未变的部分</li>
+<li>3.将未变部分替换为欲上传的webshell</li>
+<li>4.将替换后的文件进行图像转换，看是否转换后仍存在替换后部分</li>
+</ul>
+</li>
+</ul>
+]]></description>
+</item><item>
     <title>工作记录之rabbitmq镜像集群部署(短篇)</title>
     <link>https://testoai.github.io/posts/rabbitmq%E9%95%9C%E5%83%8F%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</link>
     <pubDate>Tue, 18 May 2021 15:22:23 &#43;0800</pubDate>
