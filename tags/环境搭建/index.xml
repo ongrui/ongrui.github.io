@@ -11,7 +11,7 @@
     <guid>https://testoai.github.io/posts/rabbitmq%E9%95%9C%E5%83%8F%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</guid>
     <description><![CDATA[<p>记录一次工作中搭建rabbitmq集群遇到的问题</p>
 <h2 id="rabbitmq是啥">rabbitmq是啥</h2>
-<p>erlang语言编写的开源的用来做消息队列的统</p>
+<p>erlang语言编写的开源的用来做消息队列的系统</p>
 <h2 id="集群部署流程centos7">集群部署流程（centos7）</h2>
 <p>erlang部署略</p>
 <p>rabbitmq单节点部署略</p>
