@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="docker"/>
 <meta name="twitter:description" content="什么是Docker docker是一款轻量级的虚拟化工具，它会提供一个虚拟环境，名为容器。 容器需要运行镜像来生成。 构建镜像可以使用docker"/>
 <meta name="application-name" content="LoveIt">
-<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/img/001.ico"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://testoai.github.io/posts/docker/" /><link rel="prev" href="https://testoai.github.io/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/img/001.ico"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://testoai.github.io/posts/docker/" /><link rel="prev" href="https://testoai.github.io/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" /><link rel="next" href="https://testoai.github.io/posts/golang-map/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/testoai.github.io\/posts\/docker\/"
-        },"genre": "posts","keywords": "docker","wordcount":  2652 ,
+        },"genre": "posts","keywords": "docker","wordcount":  2653 ,
         "url": "https:\/\/testoai.github.io\/posts\/docker\/","datePublished": "2021-06-22T00:00:00+08:00","dateModified": "2021-06-22T00:00:00+08:00","publisher": {
             "@type": "Organization",
             "name": "xxxx","logo": "https:\/\/testoai.github.io\/img\/logo.png"},"author": {
@@ -111,7 +111,7 @@
                 
                 
                 <span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>作者</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-06-22">2021-06-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2652 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-06-22">2021-06-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2653 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -152,10 +152,10 @@
 <p><em><strong>&mdash; 下面内容摘自docker官网</strong></em></p>
 <p>将软件打包到标准化单元进行开发、装运和部署</p>
 <p>容器是软件的标准单元，可将代码及其所有依赖项打包，以便应用程序从一个计算环境快速可靠地运行到另一个计算环境。Docker 容器镜像是一个轻量级、独立、可执行的软件包，包括运行应用程序所需的一切：代码、运行时间、系统工具、系统库和设置。</p>
-<p>容器镜像在运行时变成容器，在码头集装箱的情况下 - 图像成为容器时，他们运行在docker引擎。针对 Linux 和 Windows 的应用程序，无论基础设施如何，容器化软件始终运行相同。容器将软件与环境隔离开来，并确保它工作一致，尽管开发和分期之间存在差异。</p>
+<p>容器镜像在运行时变成容器，在docker容器的情况下 - 图像成为容器时，他们运行在docker引擎。针对 Linux 和 Windows 的应用程序，无论基础设施如何，容器化软件始终运行相同。容器将软件与环境隔离开来，并确保它工作一致，尽管开发和分期之间存在差异。</p>
 <p>在码头发动机上运行的码头集装箱：</p>
 <ul>
-<li>**标准：**Docker 为容器创建了行业标准，因此它们可以在任何地方随地运输</li>
+<li>**标准：**Docker 为容器创建了行业标准，因此它们可以在任何地方移植</li>
 <li>**重量轻：**容器共享机器的操作系统内核，因此不需要每个应用程序的操作系统，从而提高服务器效率并降低服务器和许可成本</li>
 <li>**安全：**在容器中应用更安全，Docker 提供业内最强的默认隔离功能</li>
 </ul>
@@ -761,7 +761,8 @@ OK
         </section>
     </div>
 
-    <div class="post-nav"><a href="/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="prev" rel="prev" title="安全测试之-文件上传"><i class="fas fa-angle-left fa-fw"></i>安全测试之-文件上传</a></div>
+    <div class="post-nav"><a href="/posts/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="prev" rel="prev" title="安全测试之-文件上传"><i class="fas fa-angle-left fa-fw"></i>安全测试之-文件上传</a>
+            <a href="/posts/golang-map/" class="next" rel="next" title="Golang之Map">Golang之Map<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 <div id="comments"><div id="utterances"></div><noscript>
                 Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">Utterances</a>.

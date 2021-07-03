@@ -3,7 +3,538 @@
         <title>Golang - 标签 - 菜狗瑞的学习周记</title>
         <link>https://testoai.github.io/tags/golang/</link>
         <description>Golang - 标签 - 菜狗瑞的学习周记</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 11 May 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/tags/golang/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 03 Jul 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/tags/golang/" rel="self" type="application/rss+xml" /><item>
+    <title>Golang之Map</title>
+    <link>https://testoai.github.io/posts/golang-map/</link>
+    <pubDate>Sat, 03 Jul 2021 00:00:00 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://testoai.github.io/posts/golang-map/</guid>
+    <description><![CDATA[<h2 id="map">Map</h2>
+<p>一种成对出现的键值数据结构，一个map中有多个键值对</p>
+<p>key必须是可哈希的数据类型</p>
+<p>map是线程不安全的</p>
+<h3 id="map实现方式">Map实现方式</h3>
+<p>map是基于哈希表存储的</p>
+<ul>
+<li>1.根据hash算法计算出键的哈希值</li>
+<li>2.根据哈希值和哈希表的数量进行取模运算</li>
+<li>3.计算出来的值就是这个key放入到哈希表的位置</li>
+</ul>
+<p>哈希计算一般会存在哈希碰撞问题，不同的key能能计算出的值是一样的</p>
+<p>如果出现了哈希碰撞，则会在这个位置以链表的形式存储落到该位置上的key</p>
+<h3 id="初始化">初始化</h3>
+<p>通过make来初始化分配内存</p>
+<p>每个key只能出现一次，如果同一个key出现两次，后面key的val会覆盖之前key的val</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">m</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>1.当make的时候，会创建一个hmap结构体对象</p>
+</li>
+<li>
+<p>2.生成一个哈希因子<code>hash0</code>并赋值到hmap对象中，用于后续为key创建哈希值</p>
+</li>
+<li>
+<p>3.根据指定的map长度计算出B的长度</p>
+</li>
+<li>
+<p>4.然后根据B去创建桶（bmap）并存放在buckets数组中</p>
+<ul>
+<li>当B&lt;4时，根据B创建桶的个数的规则为：2^B（标准桶）</li>
+<li>当B&gt;=4时，根据B创建桶的个数的规则为2^B+2^B-4（标准桶+溢出桶）</li>
+</ul>
+</li>
+<li>
+<p>每个bmap可以存放8个键值对，当空间不够时，则需要使用溢出桶，并将当前bmap中的overflow指向溢出桶的位置</p>
+</li>
+</ul>
+<h3 id="写入数据">写入数据</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;test&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>1.使用哈希因子对键进行哈希运算，得到一个结果</li>
+<li>2.获取改结果的后B位，并根据后B为的值来决定将此键值对存放到那个桶中（bmap）</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">将哈希值和桶掩码进行&amp;运算，最终得到哈希值的后B位的值。假设当B位1时，其结果为0
+哈希值：0110111000111111111101110111010
+桶掩码：0000000000000000000000000000001
+结果	:00000000000000000000000000000000 = 0
+
+找桶的原则实际上是根据后B位的位运算计算出索引位置，然后再根据buckets数组中根据索引找到目标桶（bmap）
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>也可以在声明时直接赋值，该方式不用make</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">m</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+    <span class="s">&#34;test1&#34;</span><span class="p">:</span><span class="s">&#34;a&#34;</span><span class="p">,</span>
+    <span class="s">&#34;test2&#34;</span><span class="p">:</span><span class="s">&#34;b&#34;</span><span class="p">,</span>
+    <span class="s">&#34;test3&#34;</span><span class="p">:</span><span class="s">&#34;c&#34;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="修改数据">修改数据</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">m</span><span class="p">[</span><span class="s">&#34;test1&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">1</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>上面提到过，每个key只能出现一次，如果修改的key在map中已经存在，上面代码则会修改之前key的val</li>
+<li>如果没有，则会新增</li>
+<li>修改之前可以先查询下</li>
+</ul>
+<h3 id="删除数据">删除数据</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nb">delete</span><span class="p">(</span><span class="nx">mapName</span><span class="p">,</span><span class="s">&#34;key&#34;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>key存在时则执行删除操作</p>
+</li>
+<li>
+<p>key不存在时，也不会报错</p>
+</li>
+<li>
+<p>删除所有的key</p>
+<ul>
+<li>1.可以遍历删除</li>
+<li>2.可以再次对该map进行make操作，旧的key会被GC回收</li>
+<li>没有内置的清空所有key的方法</li>
+</ul>
+</li>
+</ul>
+<h3 id="遍历数据">遍历数据</h3>
+<ul>
+<li>可以使用for range方法和for循环来遍历</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//for range方法示例
+</span><span class="c1"></span><span class="nx">m</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+    <span class="s">&#34;test1&#34;</span><span class="p">:</span><span class="s">&#34;1&#34;</span><span class="p">,</span>
+    <span class="s">&#34;test2&#34;</span><span class="p">:</span><span class="s">&#34;2&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">m</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">test1</span> <span class="mi">1</span>
+<span class="nx">test2</span> <span class="mi">2</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>遍历嵌套map时可以在for range里面再套一层for range</li>
+</ul>
+<h2 id="syncmap">sync.Map</h2>
+<p>golang中的map是并发不安全的，从go1.9开始，加入了sync.Map，用来解决map并发安全的问题</p>
+<h3 id="map实现并发安全">map实现并发安全</h3>
+<ul>
+<li>map需要加锁实现并发安全</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">m</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nx">rwlock</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
+
+<span class="kd">func</span> <span class="nf">get</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="nx">rwlock</span><span class="p">.</span><span class="nf">RLock</span><span class="p">()</span>
+	<span class="nx">s</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
+	<span class="nx">rwlock</span><span class="p">.</span><span class="nf">RUnlock</span><span class="p">()</span>
+	<span class="k">return</span> <span class="nx">s</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">set</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">value</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">rwlock</span><span class="p">.</span><span class="nf">RLock</span><span class="p">()</span>
+	<span class="nx">m</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="p">=</span> <span class="nx">value</span>
+	<span class="nx">rwlock</span><span class="p">.</span><span class="nf">RUnlock</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">wg</span> <span class="o">:=</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">{}</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">21</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+		<span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">key</span> <span class="o">:=</span> <span class="nx">strconv</span><span class="p">.</span><span class="nf">Itoa</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span>
+			<span class="nf">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;key=%v,v=%v\n&#34;</span><span class="p">,</span> <span class="nx">key</span><span class="p">,</span> <span class="nf">get</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span>
+			<span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
+		<span class="p">}(</span><span class="nx">i</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>但是如果map中数据量较大时，加锁则会影响性能</li>
+</ul>
+<h3 id="syncmap-1">sync.Map</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Map</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">mu</span> <span class="nx">Mutex</span>
+
+	<span class="c1">// read contains the portion of the map&#39;s contents that are safe for
+</span><span class="c1"></span>	<span class="c1">// concurrent access (with or without mu held).
+</span><span class="c1"></span>	<span class="c1">//
+</span><span class="c1"></span>	<span class="c1">// The read field itself is always safe to load, but must only be stored with
+</span><span class="c1"></span>	<span class="c1">// mu held.
+</span><span class="c1"></span>	<span class="c1">//
+</span><span class="c1"></span>	<span class="c1">// Entries stored in read may be updated concurrently without mu, but updating
+</span><span class="c1"></span>	<span class="c1">// a previously-expunged entry requires that the entry be copied to the dirty
+</span><span class="c1"></span>	<span class="c1">// map and unexpunged with mu held.
+</span><span class="c1"></span>	<span class="nx">read</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span> <span class="c1">// readOnly
+</span><span class="c1"></span>
+	<span class="c1">// dirty contains the portion of the map&#39;s contents that require mu to be
+</span><span class="c1"></span>	<span class="c1">// held. To ensure that the dirty map can be promoted to the read map quickly,
+</span><span class="c1"></span>	<span class="c1">// it also includes all of the non-expunged entries in the read map.
+</span><span class="c1"></span>	<span class="c1">//
+</span><span class="c1"></span>	<span class="c1">// Expunged entries are not stored in the dirty map. An expunged entry in the
+</span><span class="c1"></span>	<span class="c1">// clean map must be unexpunged and added to the dirty map before a new value
+</span><span class="c1"></span>	<span class="c1">// can be stored to it.
+</span><span class="c1"></span>	<span class="c1">//
+</span><span class="c1"></span>	<span class="c1">// If the dirty map is nil, the next write to the map will initialize it by
+</span><span class="c1"></span>	<span class="c1">// making a shallow copy of the clean map, omitting stale entries.
+</span><span class="c1"></span>	<span class="nx">dirty</span> <span class="kd">map</span><span class="p">[</span><span class="kd">interface</span><span class="p">{}]</span><span class="o">*</span><span class="nx">entry</span>
+
+	<span class="c1">// misses counts the number of loads since the read map was last updated that
+</span><span class="c1"></span>	<span class="c1">// needed to lock mu to determine whether the key was present.
+</span><span class="c1"></span>	<span class="c1">//
+</span><span class="c1"></span>	<span class="c1">// Once enough misses have occurred to cover the cost of copying the dirty
+</span><span class="c1"></span>	<span class="c1">// map, the dirty map will be promoted to the read map (in the unamended
+</span><span class="c1"></span>	<span class="c1">// state) and the next store to the map will make a new dirty copy.
+</span><span class="c1"></span>	<span class="nx">misses</span> <span class="kt">int</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>sync.Map通过read和dirty两个字段把读写分离，读的数据存到read上，写入的数据存到dirty字段</p>
+<p>读的时候先查询read，查不到再查dirty</p>
+<p>写的话只写入到dirty中</p>
+<p>读read不加锁，读写dirty都加锁</p>
+<p>通过misses来记录查询dirty的次数，超过指定的次数则将dirty中的数据同步到read中</p>
+<ul>
+<li>通过上面可以了解到，sync.Map通过读写分离的方式解决并发安全问题，适用于读取比写入频率高的场景</li>
+</ul>
+<h3 id="syncmap中的方法">sync.Map中的方法</h3>
+<h4 id="store">Store</h4>
+<ul>
+<li>用来新增数据</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Map</span><span class="p">)</span> <span class="nf">Store</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">{</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">m</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Map</span>
+<span class="nx">m</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">,</span><span class="s">&#34;a&#34;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="load">Load</h4>
+<ul>
+<li>返回指定key的val，如果key没有查到，val则被置为nil，ok会被标记为false</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">func (m *Map) Load(key interface{}) (value interface{}, ok bool) {
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">m</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Map</span>
+<span class="nx">m</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">,</span><span class="s">&#34;a&#34;</span><span class="p">)</span>
+<span class="nx">valA</span><span class="p">,</span><span class="nx">ok</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">.</span><span class="nf">Load</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;key does not exist&#34;</span><span class="p">)</span>
+    <span class="k">return</span>
+<span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">valA</span><span class="p">)</span> <span class="c1">//a
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>查找不存在的key</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 不存在的key
+</span><span class="c1"></span><span class="nx">valB</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">.</span><span class="nf">Load</span><span class="p">(</span><span class="s">&#34;test1&#34;</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+	<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;key does not exist&#34;</span><span class="p">)</span> <span class="c1">//key does not exist
+</span><span class="c1"></span>	<span class="k">return</span>
+<span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">valB</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="delete">Delete</h4>
+<ul>
+<li>删除指定的key</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Map</span><span class="p">)</span> <span class="nf">Delete</span><span class="p">(</span><span class="nx">key</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">{</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">m</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Map</span>
+<span class="nx">m</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">,</span><span class="s">&#34;a&#34;</span><span class="p">)</span>
+<span class="nx">m</span><span class="p">.</span><span class="nf">Delete</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">)</span>
+<span class="nx">m</span><span class="p">.</span><span class="nf">Delete</span><span class="p">(</span><span class="s">&#34;pass&#34;</span><span class="p">)</span> <span class="c1">//指定的key不存在时也不会报错
+</span></code></pre></td></tr></table>
+</div>
+</div><h4 id="range">Range</h4>
+<ul>
+<li>用来遍历元素</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Map</span><span class="p">)</span> <span class="nf">Range</span><span class="p">(</span><span class="nx">f</span> <span class="kd">func</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">m</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Map</span>
+<span class="nx">m</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="s">&#34;test1&#34;</span><span class="p">,</span><span class="s">&#34;a&#34;</span><span class="p">)</span>
+<span class="nx">m</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="s">&#34;test2&#34;</span><span class="p">,</span><span class="s">&#34;b&#34;</span><span class="p">)</span>
+<span class="nx">m</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="s">&#34;test3&#34;</span><span class="p">,</span><span class="s">&#34;c&#34;</span><span class="p">)</span>
+
+<span class="nx">m</span><span class="p">.</span><span class="nf">Range</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;key:%v,val:%v\n&#34;</span><span class="p">,</span><span class="nx">key</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">true</span>
+<span class="p">})</span>
+<span class="c1">//key:test1,val:a
+</span><span class="c1">//key:test2,val:b
+</span><span class="c1">//key:test3,val:c
+</span></code></pre></td></tr></table>
+</div>
+</div><h4 id="loadorstore">LoadOrStore</h4>
+<ul>
+<li>传入一个key和val，返回val和bool</li>
+<li>如果传入的key存在，则返回key的val和true，如果不存在，则存储传入的key和val，并返回val和false</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Map</span><span class="p">)</span> <span class="nf">LoadOrStore</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">(</span><span class="nx">actual</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">loaded</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">m</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Map</span>
+<span class="nx">m</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="s">&#34;test1&#34;</span><span class="p">,</span> <span class="s">&#34;a&#34;</span><span class="p">)</span>
+
+<span class="nx">store</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">.</span><span class="nf">LoadOrStore</span><span class="p">(</span><span class="s">&#34;test4&#34;</span><span class="p">,</span> <span class="s">&#34;d&#34;</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">store</span><span class="p">,</span> <span class="nx">ok</span><span class="p">)</span> <span class="c1">// d false
+</span><span class="c1"></span>
+<span class="nx">tStore</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">.</span><span class="nf">LoadOrStore</span><span class="p">(</span><span class="s">&#34;test1&#34;</span><span class="p">,</span> <span class="s">&#34;1&#34;</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">tStore</span><span class="p">,</span> <span class="nx">ok</span><span class="p">)</span> <span class="c1">// a true
+</span></code></pre></td></tr></table>
+</div>
+</div><h2 id="总结">总结</h2>
+<p>map+sync.RWMutex使用于数据量比较小的场景</p>
+<p>sync.Map适用于读比写频率高的场景</p>
+<p>学习的还不够深入，继续加油</p>
+<h2 id="学习资料">学习资料</h2>
+<p>Go SDK 1.14.4 sync.Map</p>
+<p><a href="https://qcrao91.gitbook.io/go/map">https://qcrao91.gitbook.io/go/map</a></p>
+<p><a href="https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/">https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/</a></p>
+<p><a href="https://blog.csdn.net/jiankunking/article/details/78808978">https://blog.csdn.net/jiankunking/article/details/78808978</a></p>
+<p><a href="https://blog.csdn.net/u010230794/article/details/82143179">https://blog.csdn.net/u010230794/article/details/82143179</a></p>
+]]></description>
+</item><item>
     <title>Golang之Context</title>
     <link>https://testoai.github.io/posts/golang-context/</link>
     <pubDate>Tue, 11 May 2021 00:00:00 &#43;0800</pubDate>

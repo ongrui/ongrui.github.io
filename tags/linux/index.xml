@@ -493,7 +493,7 @@ drwx------ 2 root root    6 Mar  8 11:49 uwsgi_temp
 <ul>
 <li>方式一：使用：<code>sed -n '10,20p' 日志文件名称</code>
 <ul>
-<li><code>-n</code>：打印制定行</li>
+<li><code>-n</code>：打印指定行</li>
 <li><code>'10,20p'</code>：指定的行号</li>
 </ul>
 </li>

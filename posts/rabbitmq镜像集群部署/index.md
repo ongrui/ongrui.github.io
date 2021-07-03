@@ -47,6 +47,7 @@ rabbitmqctl stop_app            # 停止rabbitmq应用
 rabbitmqctl reset               # 重置节点，该操作会删除该节点的集群信息，持久化信息，用户信息
 rabbitmqctl join_cluster rabbit@mqa # 将该节点添加到mqa节点下，mqa节点必须是开启状态
 rabbitmqctl start_app           # 启动rabbitmq应用
+rabbitmqctl-plugins enable rabbitmq_management # 开启web管理插件，如果想在浏览器查看集群状态时，每个节点都要启用该配置
 ```
 
 - 4.在主节点开启web管理插件

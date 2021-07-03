@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/testoai.github.io\/posts\/rabbitmq%E9%95%9C%E5%83%8F%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2\/"
-        },"genre": "posts","keywords": "环境搭建","wordcount":  476 ,
+        },"genre": "posts","keywords": "环境搭建","wordcount":  517 ,
         "url": "https:\/\/testoai.github.io\/posts\/rabbitmq%E9%95%9C%E5%83%8F%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2\/","datePublished": "2021-05-18T15:22:23+08:00","dateModified": "2021-05-18T15:22:23+08:00","publisher": {
             "@type": "Organization",
             "name": "xxxx","logo": "https:\/\/testoai.github.io\/img\/logo.png"},"author": {
@@ -111,8 +111,8 @@
                 
                 
                 <span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>作者</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-05-18">2021-05-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 476 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-05-18">2021-05-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 517 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -173,6 +173,7 @@
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
+</span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-fallback" data-lang="fallback">systemctl start rabbitmq-server # 启动服务
@@ -180,6 +181,7 @@ rabbitmqctl stop_app            # 停止rabbitmq应用
 rabbitmqctl reset               # 重置节点，该操作会删除该节点的集群信息，持久化信息，用户信息
 rabbitmqctl join_cluster rabbit@mqa # 将该节点添加到mqa节点下，mqa节点必须是开启状态
 rabbitmqctl start_app           # 启动rabbitmq应用
+rabbitmqctl-plugins enable rabbitmq_management # 开启web管理插件，如果想在浏览器查看集群状态时，每个节点都要启用该配置
 </code></pre></td></tr></table>
 </div>
 </div><ul>
