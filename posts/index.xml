@@ -3230,6 +3230,63 @@ root      <span class="m">7194</span>  0.0  0.0 <span class="m">112736</span>   
 tcp    LISTEN     <span class="m">0</span>      <span class="m">128</span>       *:3306      *:*    users:<span class="o">((</span><span class="s2">&#34;docker-proxy&#34;</span>,pid<span class="o">=</span>28320,fd<span class="o">=</span>4<span class="o">))</span>
 </code></pre></td></tr></table>
 </div>
+</div><p>2021.07.10</p>
+<h2 id="查看文件系统硬盘使用情况">查看文件系统硬盘使用情况</h2>
+<ul>
+<li>使用df来查看硬盘使用情况</li>
+</ul>
+<h3 id="参数-1">参数</h3>
+<ul>
+<li>a：显示所有文件信息</li>
+<li>m：以MB为单位显示容量</li>
+<li>k：以KB为单位显示容量</li>
+<li>h：以KB、MB、GB为单位自行显示容量</li>
+<li>T：显示该分区的文件系统名称</li>
+<li>i：不用硬盘容量显示，而是以含有inode的数量来显示</li>
+</ul>
+<p>使用的最多的是df -h</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">[root@pacs ~]# df -h
+Filesystem               Size  Used Avail Use% Mounted on
+devtmpfs                 7.8G     0  7.8G   0% /dev
+tmpfs                    7.8G     0  7.8G   0% /dev/shm
+tmpfs                    7.8G  777M  7.0G  10% /run
+tmpfs                    7.8G     0  7.8G   0% /sys/fs/cgroup
+/dev/mapper/centos-root   50G   15G   36G  29% /
+/dev/mapper/centos-home  167G   83G   84G  50% /home
+/dev/xvda1               497M  219M  279M  45% /boot
+tmpfs                    1.6G   12K  1.6G   1% /run/user/42
+tmpfs                    1.6G     0  1.6G   0% /run/user/385
+tmpfs                    1.6G     0  1.6G   0% /run/user/0
+/dev/dm-5                 30G  550M   30G   2% /home/apps/docker/devicemapper/mnt/716b06271724538bfaad350c0a054dde7e54db34e28c417f07842564d8a14021
+/dev/dm-6                 30G  526M   30G   2% /home/apps/docker/devicemapper/mnt/cd888eb5fe250ab255fc13646a5fd4de943b2b1bf162f64a7146697378ae9424
+/dev/dm-7                 30G   12G   19G  38% /home/apps/docker/devicemapper/mnt/4e95d08a9f25293974b18da280484a55cd1359e593d60c1a0db5697642c24c13
+/dev/dm-8                 30G  493M   30G   2% /home/apps/docker/devicemapper/mnt/652cb0933f40cea24bfd8df3ec43e63f02e65a51cd48bbd4fd4d8a617da2f7ac
+/dev/dm-9                 30G  494M   30G   2% /home/apps/docker/devicemapper/mnt/3c74dba554f0e812152b80e1fc6d12865530ed573b57059d3cb01e0f3099c704
+/dev/dm-10                30G  9.0G   22G  30% /home/apps/docker/devicemapper/mnt/8fc80177eea5c6f9565c102a9c1d234796e2ee9d9f444067522ed7d36765d0b4
+</code></pre></td></tr></table>
+</div>
 </div>]]></description>
 </item><item>
     <title>第一篇文章</title>
