@@ -109,6 +109,40 @@ docker rm 容器id/容器名称
 docker rmi imageId
 ```
 
+## 导出导入
+
+### 导出
+
+1.提交容器修改，会新创建一个镜像
+
+```bash
+docker commit 10874ee33238 oracle:6120bak
+```
+
+2.查看保存的镜像
+
+```bash
+docker images
+```
+
+3.将镜像另存一个备份文件
+
+```bash
+docker save -o oracle.tar oracle:6120bak
+```
+
+### 导入
+
+4.导入镜像
+
+```bash	
+docker load < oracle.tar
+```
+
+```bash
+docker load -i oracle.tar
+```
+
 ## 构建镜像
 
 构建镜像有两种方式，一种是基于已有镜像生成的容器，使用commit命令提交对容器的修改

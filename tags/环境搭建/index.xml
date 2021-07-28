@@ -1,8 +1,8 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>环境搭建 - 标签 - 菜狗瑞的学习周记</title>
+        <title>环境搭建 - 标签 - 菜狗瑞的学习记笔记</title>
         <link>https://testoai.github.io/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
-        <description>环境搭建 - 标签 - 菜狗瑞的学习周记</description>
+        <description>环境搭建 - 标签 - 菜狗瑞的学习记笔记</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 18 May 2021 15:22:23 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="self" type="application/rss+xml" /><item>
     <title>工作记录之rabbitmq镜像集群部署(短篇)</title>
     <link>https://testoai.github.io/posts/rabbitmq%E9%95%9C%E5%83%8F%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</link>

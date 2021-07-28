@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <title>Golang之Map - 菜狗瑞的学习周记</title><meta name="Description" content="关于 LoveIt 主题"><meta property="og:title" content="Golang之Map" />
+        <title>Golang之Map - 菜狗瑞的学习记笔记</title><meta name="Description" content="关于 LoveIt 主题"><meta property="og:title" content="Golang之Map" />
 <meta property="og:description" content="Map 一种成对出现的键值数据结构，一个map中有多个键值对 key必须是可哈希的数据类型 map是线程不安全的 Map实现方式 map是基于哈希表存储的" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://testoai.github.io/posts/golang-map/" /><meta property="og:image" content="https://testoai.github.io/logo.png"/><meta property="article:section" content="posts" />
@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="Golang之Map"/>
 <meta name="twitter:description" content="Map 一种成对出现的键值数据结构，一个map中有多个键值对 key必须是可哈希的数据类型 map是线程不安全的 Map实现方式 map是基于哈希表存储的"/>
 <meta name="application-name" content="LoveIt">
-<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/img/001.ico"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://testoai.github.io/posts/golang-map/" /><link rel="prev" href="https://testoai.github.io/posts/docker/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/img/001.ico"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://testoai.github.io/posts/golang-map/" /><link rel="prev" href="https://testoai.github.io/posts/docker/" /><link rel="next" href="https://testoai.github.io/posts/tcp/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
@@ -41,7 +41,7 @@
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="菜狗瑞的学习周记"><span class="header-title-pre"><a href="/posts/" title="菜狗瑞的学习周记">菜狗瑞的学习周记</a></span></a>
+            <a href="/" title="菜狗瑞的学习记笔记"><span class="header-title-pre"><a href="/posts/" title="菜狗瑞的学习笔记">菜狗瑞的学习笔记</a></span></a>
         </div>
         <div class="menu">
             <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
@@ -65,7 +65,7 @@
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="菜狗瑞的学习周记"><span class="header-title-pre"><a href="/posts/" title="菜狗瑞的学习周记">菜狗瑞的学习周记</a></span></a>
+                <a href="/" title="菜狗瑞的学习记笔记"><span class="header-title-pre"><a href="/posts/" title="菜狗瑞的学习笔记">菜狗瑞的学习笔记</a></span></a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
@@ -696,13 +696,14 @@
         </section>
     </div>
 
-    <div class="post-nav"><a href="/posts/docker/" class="prev" rel="prev" title="docker"><i class="fas fa-angle-left fa-fw"></i>docker</a></div>
+    <div class="post-nav"><a href="/posts/docker/" class="prev" rel="prev" title="docker"><i class="fas fa-angle-left fa-fw"></i>docker</a>
+            <a href="/posts/tcp/" class="next" rel="next" title="TCP">TCP<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 <div id="comments"><div id="utterances"></div><noscript>
                 Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">Utterances</a>.
             </noscript></div></article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span>&nbsp;|&nbsp;<span class="license">菜狗瑞的学习周记</span></div>
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span>&nbsp;|&nbsp;<span class="license">菜狗瑞的学习笔记</span></div>
         </div>
     </footer></div>
 

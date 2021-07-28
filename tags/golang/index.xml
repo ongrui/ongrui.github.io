@@ -1,8 +1,8 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Golang - 标签 - 菜狗瑞的学习周记</title>
+        <title>Golang - 标签 - 菜狗瑞的学习记笔记</title>
         <link>https://testoai.github.io/tags/golang/</link>
-        <description>Golang - 标签 - 菜狗瑞的学习周记</description>
+        <description>Golang - 标签 - 菜狗瑞的学习记笔记</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 03 Jul 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/tags/golang/" rel="self" type="application/rss+xml" /><item>
     <title>Golang之Map</title>
     <link>https://testoai.github.io/posts/golang-map/</link>

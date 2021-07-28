@@ -1,11 +1,159 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>菜狗瑞的学习周记</title>
+        <title>菜狗瑞的学习记笔记</title>
         <link>https://testoai.github.io/</link>
         <description>关于 LoveIt 主题</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 03 Jul 2021 00:00:00 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 28 Jul 2021 00:00:00 &#43;0800</lastBuildDate>
             <atom:link href="https://testoai.github.io/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>TCP</title>
+    <link>https://testoai.github.io/posts/tcp/</link>
+    <pubDate>Wed, 28 Jul 2021 00:00:00 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://testoai.github.io/posts/tcp/</guid>
+    <description><![CDATA[<h2 id="简介">简介</h2>
+<ul>
+<li>
+<p>TCP(Transmission Control Protocol)传输控制协议，是一种面向连接的、可靠的、基于字节流的传输层通信协议</p>
+<ul>
+<li>面向连接：点对点的连接</li>
+<li>字节流：是指传输过程中，传输数据的最基本单位是字节的流，一个不包含边界数据的连续流</li>
+<li>流：流是一个抽象的概念，是对输入输出的抽象，输入流可以看作一个输入通道，输出流可以看作一个输出通道。外部传入数据给程序需要借助输入流。程序传输到外部需要借助输出流</li>
+</ul>
+</li>
+<li>
+<p>TCP是传输层的协议</p>
+</li>
+<li>
+<p>TCP连接是全双工的，并且是点到点的。TCP不支持组播和广播的传输模式</p>
+</li>
+<li>
+<p>一个TCP连接使用源地址、源端口、目的地址、目的端口四元组来确定（源地址和目标地址在IP层写入）</p>
+</li>
+</ul>
+<h2 id="tcp头部格式">TCP头部格式</h2>
+<ul>
+<li>1.源端口号：自己的端口号</li>
+<li>2.目标端口号：对方的端口号</li>
+<li>3.序列号：在建立连接时由计算机生成的随机数作为其初始值，每交换一次数据，该值就会+1被放到确认应答号中，用来解决包乱序</li>
+<li>4.确认应答号：发送端收到这个确认应答号后，会认为在这之前的数据都已经被正常接收。用来解决不丢包</li>
+<li>5.首部长度：该字段指明了TCP头包含多少个32位的字。这个信息是必须的，因为选项字段是可变长的，因而整个头也是变长的</li>
+<li>6.8个1比特的标志位
+<ul>
+<li>CWR：当收到了接收端的ECE信号时，发送端将CWR标志位设置为1，发送给接收端，这样接收端就知道了发送端放慢了发送速度</li>
+<li>ECE：当TCP端收到了网络拥塞的指示后，就设置ECE给TCP发送端发ECN-Echo信号，告诉发送端放慢发送速率</li>
+<li>URG：该位为1时，表示此数据包需要立即发送，无需考虑发送顺序问题</li>
+<li>ACK：表示确认应答</li>
+<li>PSH：与URG相对应，让接收端首先接收这条数据</li>
+<li>RST：表示出现异常并必须强制断开连接</li>
+<li>SYN：只有建立连接请求和确认请求的两个数据包中的SYN为1（三次握手的第一二次握手）</li>
+<li>FIN：表示该连接要被释放，发送端已经没有数据要传输了。</li>
+</ul>
+</li>
+<li>7.窗口大小：用于TCP流量控制，该字段指定了从被确认的字节算起可以发送多少个字节，该字段值可以为0</li>
+<li>8.校验和：</li>
+<li>9.紧急指针</li>
+<li>10.选项（0或32位的倍数）：提供了一种添加额外数据的字段，主要针对常规头覆盖不到的方面。协议定义了许多选项，选项的长度可变长，但必须是32位的倍数，不足32位用0填充。选项有40个字节的空间</li>
+<li>11.数据</li>
+</ul>
+<h2 id="建立连接">建立连接</h2>
+<p>TCP是面向连接的协议，建立连接是通过三次握手进行的</p>
+<h3 id="三次握手">三次握手</h3>
+
+<h4 id="第一次握手">第一次握手</h4>
+<p>服务端执行listen原语</p>
+<ul>
+<li>1.客户端执行connect原语</li>
+<li>2.初始化一个序列号，放到TCP首部的序号字段中</li>
+<li>3.把SYN标志位置为1，向服务端发起连接，该报文不包含应用层之间的数据</li>
+</ul>
+<p>之后客户端处于SYN-SENT状态</p>
+
+<h4 id="第二次握手">第二次握手</h4>
+<ul>
+<li>
+<p>1.当第一次握手的数据段到达服务端后，服务器的TCP实体会先检查首部的目的端口号是否被进程监听，如果没有则返回一个RET标志位位1的报文，拒绝连接。如果有进程监听，则进入第二步，交给监听该端口的进程处理</p>
+</li>
+<li>
+<p>2.服务端收到客户端的SYN报文后，会随机初始化自己的序号，然后将序号写入TCP首部的序号字段中</p>
+</li>
+<li>
+<p>3.将TCP首部的序列号字段+1，写入确认应答号中</p>
+</li>
+<li>
+<p>4.将SYN和ACK标志位置为1</p>
+</li>
+<li>
+<p>5.将该报文发送给客户端</p>
+</li>
+<li>
+<p>6.之后服务端置于SYN-RCVD状态</p>
+</li>
+</ul>
+
+<h4 id="第三次握手">第三次握手</h4>
+<ul>
+<li>1.将TCP首部ACK标志位置为1</li>
+<li>2.将序列号+1写入确认应答号中</li>
+<li>3.将报文发送给服务端</li>
+<li>4.置于ESTABLISHED（确认连接）状态</li>
+</ul>
+
+<h2 id="连接释放">连接释放</h2>
+<h3 id="四次挥手">四次挥手</h3>
+
+<p>如客户端想要断开连接</p>
+<ul>
+<li>1.<strong>客户端</strong>向服务端发送一个TCP首部<strong>FIN标志位为1</strong>的报文，请求断开链接，之后客户端进入<strong>fin_wait_1</strong>状态</li>
+<li>2.<strong>服务端</strong>收到报文后向客户端发送<strong>ACK标志位为1</strong>的报文，然后进入<strong>fin_wait_2</strong>状态</li>
+<li>3.<strong>服务端</strong>处理完数据后，也向客户端发送一个<strong>FIN标志位为1</strong>的报文，之后进入<strong>last_ack</strong>状态</li>
+<li>4.<strong>客户端</strong>收到服务端发送的FIN报文后，向服务端回复一个<strong>ACK标志位为1</strong>的报文，然后进入<strong>time_wait</strong>状态</li>
+</ul>
+<p>服务端收到ack报文后，立即进入close状态</p>
+<p>之后客户端在经过2msl的等待之后自动进入close状态</p>
+<p><strong>每一方都需要发送一个FIN和ACK报文</strong></p>
+<h2 id="udp">UDP</h2>
+<p>User Datagram Protocol 用户数据报协议，和TCP一样，位于OSI模型的传输层</p>
+<p>UDP是无连接的，不可靠的数据报协议</p>
+<ul>
+<li>数据报：面向无连接的数据传输，工作过程类似于报文交换。采用数据报方式传输时，被传输的分组称为数据报</li>
+</ul>
+<h3 id="udp头部格式">UDP头部格式</h3>
+
+<ul>
+<li>源端口：源端口号，在需要对方回信时候写入，不需要则为0</li>
+<li>目标端口：目的端口</li>
+<li>包长度：保存了UDP首部的长度和数据长度之和</li>
+<li>校验和：校验和是为了提供可靠的UDP首部和数据，检测UDP用户数据报在传输中是否有错。有错就丢弃。</li>
+</ul>
+<h3 id="tcp和udp的区别">TCP和UDP的区别</h3>
+<p>1.连接：</p>
+<ul>
+<li>TCP：面向连接的传输层协议，传输数据首先要建立连接</li>
+<li>UDP：无连接的协议，不用建立连接，直接发送数据</li>
+</ul>
+<p>2.服务对象</p>
+<ul>
+<li>TCP：一对一的服务</li>
+<li>UDP：可以一对一、一对多、多对多</li>
+</ul>
+<p>3.可靠性</p>
+<ul>
+<li>TCP：会保证数据无差错、不丢失、不重复、按需到达</li>
+<li>UDP：不保证数据的完整性</li>
+</ul>
+<p>4.流量控制</p>
+<ul>
+<li>TCP：有流量控制和拥塞控制机制，保证数据传输的安全性</li>
+<li>UDP：没有流量控制机制，无论网络环境如何，照常发送数据</li>
+</ul>
+<h2 id="学习资料">学习资料</h2>
+<p><a href="https://github.com/QSCTech/zju-icicles/blob/master/">https://github.com/QSCTech/zju-icicles/blob/master/</a>计算机网络基础/教材/计算机网络 第5版.pdf</p>
+<p><a href="https://mp.weixin.qq.com/s/rX3A_FA19n4pI9HicIEsXg">https://mp.weixin.qq.com/s/rX3A_FA19n4pI9HicIEsXg</a></p>
+<p><a href="https://zh.wikipedia.org/wiki/">https://zh.wikipedia.org/wiki/</a>用户数据报协议</p>
+<p><a href="https://wiki.mbalib.com/wiki/%E6%95%B0%E6%8D%AE%E6%8A%A5">https://wiki.mbalib.com/wiki/%E6%95%B0%E6%8D%AE%E6%8A%A5</a></p>
+]]></description>
+</item><item>
     <title>Golang之Map</title>
     <link>https://testoai.github.io/posts/golang-map/</link>
     <pubDate>Sat, 03 Jul 2021 00:00:00 &#43;0800</pubDate>
@@ -705,6 +853,53 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-fallback" data-lang="fallback">docker rmi imageId
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="导出导入">导出导入</h2>
+<h3 id="导出">导出</h3>
+<p>1.提交容器修改，会新创建一个镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker commit 10874ee33238 oracle:6120bak
+</code></pre></td></tr></table>
+</div>
+</div><p>2.查看保存的镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker images
+</code></pre></td></tr></table>
+</div>
+</div><p>3.将镜像另存一个备份文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker save -o oracle.tar oracle:6120bak
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="导入">导入</h3>
+<p>4.导入镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker load &lt; oracle.tar
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker load -i oracle.tar
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="构建镜像">构建镜像</h2>
@@ -2830,12 +3025,7 @@ rabbitmqctl-plugins enable rabbitmq_management # 开启web管理插件，如果�
     <pubDate>Sat, 10 Apr 2021 00:00:00 &#43;0800</pubDate>
     <author>作者</author>
     <guid>https://testoai.github.io/posts/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</guid>
-    <description><![CDATA[<h1 id="开篇啰嗦">开篇啰嗦</h1>
-<p>啥时候更新时间间隔超过三个月我就把持续更新去掉</p>
-<p>话说作为一个测试，是不是应该先记录测试相关的</p>
-<p>唉，在公司学的最多的就是linux</p>
-<p>先写这个吧，明天再写一篇测试相关的</p>
-<h2 id="文件操作相关">文件操作相关</h2>
+    <description><![CDATA[<h2 id="文件操作相关">文件操作相关</h2>
 <h3 id="文件拷贝-cp">文件拷贝 cp</h3>
 <ul>
 <li>拷贝文件：<code>cp 要拷贝的文件 目标路径</code></li>
@@ -3287,6 +3477,84 @@ tmpfs                    1.6G     0  1.6G   0% /run/user/0
 /dev/dm-8                 30G  493M   30G   2% /home/apps/docker/devicemapper/mnt/652cb0933f40cea24bfd8df3ec43e63f02e65a51cd48bbd4fd4d8a617da2f7ac
 /dev/dm-9                 30G  494M   30G   2% /home/apps/docker/devicemapper/mnt/3c74dba554f0e812152b80e1fc6d12865530ed573b57059d3cb01e0f3099c704
 /dev/dm-10                30G  9.0G   22G  30% /home/apps/docker/devicemapper/mnt/8fc80177eea5c6f9565c102a9c1d234796e2ee9d9f444067522ed7d36765d0b4
+</code></pre></td></tr></table>
+</div>
+</div><p>20210728</p>
+<h2 id="用户组和用户操作">用户组和用户操作</h2>
+<h3 id="创建和删除">创建和删除</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 添加用户组</span>
+groupadd tester
+
+<span class="c1"># 在tester用户组下创建一个用户</span>
+useradd -g tester testA
+
+<span class="c1"># 给testA创建密码</span>
+passwd testA
+
+<span class="c1"># 修改用户密码</span>
+<span class="c1"># 修改root用户:</span>
+passwd
+<span class="c1"># 修改其它用户（需要使用root用户修改）:</span>
+passwd testA
+
+<span class="c1"># 查看用户属于那个组</span>
+groups testA
+id testA
+
+<span class="c1"># 删除用户</span>
+userdel testA
+<span class="c1"># 删除用户组</span>
+groupdel tester
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="权限">权限</h3>
+<ul>
+<li>将/data/test/start.sh文件的拥有者赋予用户testA</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">chown testA:tester /data/test/start.sh
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>将/data/test目录及其下面的所有文件的拥有者赋予用户test1（使用-R参数）</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">chown -R testA:tester /data/test
 </code></pre></td></tr></table>
 </div>
 </div>]]></description>

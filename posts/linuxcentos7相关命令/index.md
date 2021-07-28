@@ -1,16 +1,6 @@
 # linux(Centos7)相关命令 持续更新...
 
 
-# 开篇啰嗦
-
-啥时候更新时间间隔超过三个月我就把持续更新去掉
-
-话说作为一个测试，是不是应该先记录测试相关的
-
-唉，在公司学的最多的就是linux
-
-先写这个吧，明天再写一篇测试相关的
-
 ## 文件操作相关
 
 ### 文件拷贝 cp
@@ -317,4 +307,53 @@ tmpfs                    1.6G     0  1.6G   0% /run/user/0
 /dev/dm-9                 30G  494M   30G   2% /home/apps/docker/devicemapper/mnt/3c74dba554f0e812152b80e1fc6d12865530ed573b57059d3cb01e0f3099c704
 /dev/dm-10                30G  9.0G   22G  30% /home/apps/docker/devicemapper/mnt/8fc80177eea5c6f9565c102a9c1d234796e2ee9d9f444067522ed7d36765d0b4
 ```
+
+20210728
+
+## 用户组和用户操作
+
+### 创建和删除
+
+```bash
+# 添加用户组
+groupadd tester
+
+# 在tester用户组下创建一个用户
+useradd -g tester testA
+
+# 给testA创建密码
+passwd testA
+
+# 修改用户密码
+# 修改root用户:
+passwd
+# 修改其它用户（需要使用root用户修改）:
+passwd testA
+
+# 查看用户属于那个组
+groups testA
+id testA
+
+# 删除用户
+userdel testA
+# 删除用户组
+groupdel tester
+```
+
+### 权限
+
+- 将/data/test/start.sh文件的拥有者赋予用户testA
+
+```shell
+chown testA:tester /data/test/start.sh
+```
+
+- 将/data/test目录及其下面的所有文件的拥有者赋予用户test1（使用-R参数）
+
+```shell
+chown -R testA:tester /data/test
+```
+
+
+
 

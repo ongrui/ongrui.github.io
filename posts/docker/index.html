@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <title>docker - 菜狗瑞的学习周记</title><meta name="Description" content="关于 LoveIt 主题"><meta property="og:title" content="docker" />
+        <title>docker - 菜狗瑞的学习记笔记</title><meta name="Description" content="关于 LoveIt 主题"><meta property="og:title" content="docker" />
 <meta property="og:description" content="什么是Docker docker是一款轻量级的虚拟化工具，它会提供一个虚拟环境，名为容器。 容器需要运行镜像来生成。 构建镜像可以使用docker" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://testoai.github.io/posts/docker/" /><meta property="og:image" content="https://testoai.github.io/logo.png"/><meta property="article:section" content="posts" />
@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/testoai.github.io\/posts\/docker\/"
-        },"genre": "posts","keywords": "docker","wordcount":  2653 ,
+        },"genre": "posts","keywords": "docker","wordcount":  2730 ,
         "url": "https:\/\/testoai.github.io\/posts\/docker\/","datePublished": "2021-06-22T00:00:00+08:00","dateModified": "2021-06-22T00:00:00+08:00","publisher": {
             "@type": "Organization",
             "name": "xxxx","logo": "https:\/\/testoai.github.io\/img\/logo.png"},"author": {
@@ -41,7 +41,7 @@
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="菜狗瑞的学习周记"><span class="header-title-pre"><a href="/posts/" title="菜狗瑞的学习周记">菜狗瑞的学习周记</a></span></a>
+            <a href="/" title="菜狗瑞的学习记笔记"><span class="header-title-pre"><a href="/posts/" title="菜狗瑞的学习笔记">菜狗瑞的学习笔记</a></span></a>
         </div>
         <div class="menu">
             <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
@@ -65,7 +65,7 @@
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="菜狗瑞的学习周记"><span class="header-title-pre"><a href="/posts/" title="菜狗瑞的学习周记">菜狗瑞的学习周记</a></span></a>
+                <a href="/" title="菜狗瑞的学习记笔记"><span class="header-title-pre"><a href="/posts/" title="菜狗瑞的学习笔记">菜狗瑞的学习笔记</a></span></a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
@@ -111,7 +111,7 @@
                 
                 
                 <span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>作者</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-06-22">2021-06-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2653 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-06-22">2021-06-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2730 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -122,6 +122,12 @@
   <ul>
     <li><a href="#什么是docker">什么是Docker</a></li>
     <li><a href="#常用命令">常用命令</a></li>
+    <li><a href="#导出导入">导出导入</a>
+      <ul>
+        <li><a href="#导出">导出</a></li>
+        <li><a href="#导入">导入</a></li>
+      </ul>
+    </li>
     <li><a href="#构建镜像">构建镜像</a>
       <ul>
         <li><a href="#commit">commit</a>
@@ -305,6 +311,53 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-fallback" data-lang="fallback">docker rmi imageId
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="导出导入">导出导入</h2>
+<h3 id="导出">导出</h3>
+<p>1.提交容器修改，会新创建一个镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker commit 10874ee33238 oracle:6120bak
+</code></pre></td></tr></table>
+</div>
+</div><p>2.查看保存的镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker images
+</code></pre></td></tr></table>
+</div>
+</div><p>3.将镜像另存一个备份文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker save -o oracle.tar oracle:6120bak
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="导入">导入</h3>
+<p>4.导入镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker load &lt; oracle.tar
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker load -i oracle.tar
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="构建镜像">构建镜像</h2>
@@ -768,7 +821,7 @@ OK
                 Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">Utterances</a>.
             </noscript></div></article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span>&nbsp;|&nbsp;<span class="license">菜狗瑞的学习周记</span></div>
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span>&nbsp;|&nbsp;<span class="license">菜狗瑞的学习笔记</span></div>
         </div>
     </footer></div>
 
