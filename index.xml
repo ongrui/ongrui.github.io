@@ -3,9 +3,48 @@
         <title>菜狗瑞的学习记笔记</title>
         <link>https://testoai.github.io/</link>
         <description>关于 LoveIt 主题</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 28 Jul 2021 00:00:00 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 03 Sep 2021 00:00:00 &#43;0000</lastBuildDate>
             <atom:link href="https://testoai.github.io/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>工作日记-让放射设备快速从Dicom服务上刷到worklist的方法</title>
+    <link>https://testoai.github.io/posts/%E5%B7%A5%E4%BD%9C%E6%97%A5%E8%AE%B0%E4%B9%8B%E8%81%94%E8%B0%83%E6%94%BE%E5%B0%84%E8%AE%BE%E5%A4%87%E6%97%B6%E5%A6%82%E4%BD%95%E8%AE%A9%E8%AE%BE%E5%A4%87%E5%BF%AB%E9%80%9F%E5%88%B7%E5%88%B0worklist/</link>
+    <pubDate>Fri, 03 Sep 2021 00:00:00 &#43;0000</pubDate>
+    <author>作者</author>
+    <guid>https://testoai.github.io/posts/%E5%B7%A5%E4%BD%9C%E6%97%A5%E8%AE%B0%E4%B9%8B%E8%81%94%E8%B0%83%E6%94%BE%E5%B0%84%E8%AE%BE%E5%A4%87%E6%97%B6%E5%A6%82%E4%BD%95%E8%AE%A9%E8%AE%BE%E5%A4%87%E5%BF%AB%E9%80%9F%E5%88%B7%E5%88%B0worklist/</guid>
+    <description><![CDATA[<h2 id="联调放射设备时如何一把让设备刷到worklist">联调放射设备时如何一把让设备刷到worklist</h2>
+<h2 id="只适用于替换别家的pacs">（只适用于替换别家的PACS😁）</h2>
+<p>有些医院有的放射设备维保期过了，或者是没有设备文档的情况下，dicom联调时服务就变得非常麻烦</p>
+<p>按照下面步骤基本可以一把成功刷到worklist</p>
+<ul>
+<li>
+<p>第一步</p>
+<p>登录现在正在使用的pacs服务器，装一个wireshark</p>
+</li>
+<li>
+<p>第二步</p>
+<p>过滤条件选择ip.addr={设备IP}||dicom</p>
+</li>
+<li>
+<p>第三步</p>
+<p>从设备上请求worklist</p>
+</li>
+<li>
+<p>第四步</p>
+<p>然后查看描述信息为：P-DATA, C-FIND-RQ-DATA的包</p>
+<p>展开DICOM, C-FIND-RSP, C-FIND-RSP-DATA</p>
+<p>然后再展开PDV, C-FIND-RSP-DATA</p>
+<p>就可以看到返回的所有tag信息</p>
+</li>
+<li>
+<p>第五步</p>
+<p>在自己的服务器上对照着上面的抓到的tag信息配置上</p>
+<p>完活儿~</p>
+</li>
+</ul>
+<p>注意：有些tag如果返回了但是值为空的话可能会被设备过滤掉，最好与抓到的包中的信息一致</p>
+<p>调设备给我人调麻了😭</p>
+]]></description>
+</item><item>
     <title>TCP</title>
     <link>https://testoai.github.io/posts/tcp/</link>
     <pubDate>Wed, 28 Jul 2021 00:00:00 &#43;0800</pubDate>
@@ -112,6 +151,14 @@
 <p>服务端收到ack报文后，立即进入close状态</p>
 <p>之后客户端在经过2msl的等待之后自动进入close状态</p>
 <p><strong>每一方都需要发送一个FIN和ACK报文</strong></p>
+<h2 id="tcp滑动窗口">TCP滑动窗口</h2>
+<p>滑动窗口负责告诉发送端接收端的缓冲区可用空间，然后发送端控制自己发送数据的不超过接收端缓冲区可用空间</p>
+<h4 id="异常情况">异常情况</h4>
+<p>当滑动窗口的值为0时</p>
+<ul>
+<li>紧急数据仍然可以发送，如杀掉远程机器上的某个进程</li>
+<li>发送端可以发送一个1字节的段，请求接收端重新发送滑动窗口的大小。该数据包被成为窗口探测（window probe）。TCP标准明确提供了这个选项，防止数据包丢失后发生死锁</li>
+</ul>
 <h2 id="udp">UDP</h2>
 <p>User Datagram Protocol 用户数据报协议，和TCP一样，位于OSI模型的传输层</p>
 <p>UDP是无连接的，不可靠的数据报协议</p>
@@ -1522,7 +1569,7 @@ OK
 </ul>
 ]]></description>
 </item><item>
-    <title>工作记录之rabbitmq镜像集群部署(短篇)</title>
+    <title>工作日记-rabbitmq镜像集群部署(短篇)</title>
     <link>https://testoai.github.io/posts/rabbitmq%E9%95%9C%E5%83%8F%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</link>
     <pubDate>Tue, 18 May 2021 15:22:23 &#43;0800</pubDate>
     <author>作者</author>
@@ -3558,22 +3605,5 @@ groupdel tester
 </code></pre></td></tr></table>
 </div>
 </div>]]></description>
-</item><item>
-    <title>第一篇文章</title>
-    <link>https://testoai.github.io/posts/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</link>
-    <pubDate>Sun, 04 Apr 2021 00:00:00 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>https://testoai.github.io/posts/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</guid>
-    <description><![CDATA[<h1 id="第一篇文章">第一篇文章</h1>
-<p>写点儿啥呢</p>
-<p>这两天一直在弄博客，昨天弄了一天icon，</p>
-<p>hugo的文档有点儿多，没找到config.toml的说明文档 [手动笑哭]</p>
-<p>最后各种Google，昨晚终于弄好了</p>
-<p>其实昨天一直边玩儿边搞，在家弄效率是不太高 ^_^</p>
-<p>但是这个为啥不兼容markdown的表情 ToT</p>
-<p>今天是清明节，本来打算回家&hellip;，改到五一假期再回吧</p>
-<p>祝自个儿下周二顺利吧</p>
-<p>开始学习&hellip;</p>
-]]></description>
 </item></channel>
 </rss>
