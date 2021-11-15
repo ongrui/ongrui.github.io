@@ -3,7 +3,414 @@
         <title>Golang - 标签 - 菜狗瑞的学习记笔记</title>
         <link>https://testoai.github.io/tags/golang/</link>
         <description>Golang - 标签 - 菜狗瑞的学习记笔记</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 03 Jul 2021 00:00:00 &#43;0800</lastBuildDate><atom:link href="https://testoai.github.io/tags/golang/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 15 Nov 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://testoai.github.io/tags/golang/" rel="self" type="application/rss+xml" /><item>
+    <title>Golang之channel</title>
+    <link>https://testoai.github.io/posts/golang-channel/</link>
+    <pubDate>Mon, 15 Nov 2021 00:00:00 &#43;0000</pubDate>
+    <author>作者</author>
+    <guid>https://testoai.github.io/posts/golang-channel/</guid>
+    <description><![CDATA[<h2 id="什么是channel">什么是Channel</h2>
+<ul>
+<li>
+<p>channel是golang中的一种数据类型，它像一个管道或者是队列，规则是先入先出，可以保证数据的顺序。</p>
+</li>
+<li>
+<p>声明channel时需要指定channel中存放数据的类型</p>
+</li>
+<li>
+<p>channel是并发安全的，它可以被用来做程间通信</p>
+</li>
+<li>
+<p>channel是引用类型</p>
+</li>
+</ul>
+<h2 id="channel的结构">channel的结构</h2>
+<p>runtime.hchan</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">hchan</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">qcount</span>   <span class="kt">uint</span>           <span class="c1">// total data in the queue
+</span><span class="c1"></span>	<span class="nx">dataqsiz</span> <span class="kt">uint</span>           <span class="c1">// size of the circular queue
+</span><span class="c1"></span>	<span class="nx">buf</span>      <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span> <span class="c1">// points to an array of dataqsiz elements
+</span><span class="c1"></span>	<span class="nx">elemsize</span> <span class="kt">uint16</span>
+	<span class="nx">closed</span>   <span class="kt">uint32</span>
+	<span class="nx">elemtype</span> <span class="o">*</span><span class="nx">_type</span> <span class="c1">// element type
+</span><span class="c1"></span>	<span class="nx">sendx</span>    <span class="kt">uint</span>   <span class="c1">// send index
+</span><span class="c1"></span>	<span class="nx">recvx</span>    <span class="kt">uint</span>   <span class="c1">// receive index
+</span><span class="c1"></span>	<span class="nx">recvq</span>    <span class="nx">waitq</span>  <span class="c1">// list of recv waiters
+</span><span class="c1"></span>	<span class="nx">sendq</span>    <span class="nx">waitq</span>  <span class="c1">// list of send waiters
+</span><span class="c1"></span>
+	<span class="c1">// lock protects all fields in hchan, as well as several
+</span><span class="c1"></span>	<span class="c1">// fields in sudogs blocked on this channel.
+</span><span class="c1"></span>	<span class="c1">//
+</span><span class="c1"></span>	<span class="c1">// Do not change another G&#39;s status while holding this lock
+</span><span class="c1"></span>	<span class="c1">// (in particular, do not ready a G), as this can deadlock
+</span><span class="c1"></span>	<span class="c1">// with stack shrinking.
+</span><span class="c1"></span>	<span class="nx">lock</span> <span class="nx">mutex</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>qcount</code> channel中的元素个数</li>
+<li><code>dataqsiz</code> channel中循环队列的长度</li>
+<li><code>buf</code> channel的缓冲区指针</li>
+<li><code>sendx</code> channel的发送操作处理到的位置</li>
+<li><code>recvx</code> channel的接收操作处理到的位置</li>
+<li><code>recvq</code> channel等待读取的goroutine队列</li>
+<li><code>sendq</code> channel等待发送的goroutine队列</li>
+</ul>
+<h2 id="创建channel">创建channel</h2>
+<p>创建channel时需要使用make来创建</p>
+<p>channel分为带缓冲区的channel和不带缓冲区的channel</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//带缓冲区的
+</span><span class="c1"></span><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">string</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">//不带缓冲区的
+</span><span class="c1"></span><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当make的时候会对传入的缓冲区大小进行判断，如果make的时候缓冲区大小没有传值，那么当前缓冲区大小就会被设置为默认值0，也就是没有缓冲区</p>
+<h2 id="发送数据">发送数据</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">i</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="发送数据需要注意的地方">发送数据需要注意的地方</h3>
+<ul>
+<li>1.如目标channel创建时定义存放的数据类型是int类型时，那么发送数据时只能发送int类型的数据</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="s">&#34;test&#34;</span> <span class="c1">//cannot use &#34;test&#34; (type untyped string) as type int in send
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>2.当目标channel没有缓冲区，且等待接收队列中没有goroutine，会阻塞发送</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span> <span class="c1">//fatal error: all goroutines are asleep - deadlock!
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>3.当目标channel处于关闭状态时，会报panic，提示通道已关闭</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span> <span class="c1">//panic: send on closed channel
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>4.当目标channel缓冲区已满时，且等待队列中没有goroutine，会阻塞发送</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">2</span> <span class="c1">//fatal error: all goroutines are asleep - deadlock!
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>5.当声明的目标channel为只读的channel时，无法写入数据</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="kd">chan</span> <span class="kt">int</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">2</span> <span class="c1">//invalid operation: ch &lt;- 2 (send to receive-only type &lt;-chan int)
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="读取数据">读取数据</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">ch</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="读取数据需要注意的地方">读取数据需要注意的地方</h3>
+<ul>
+<li>1.目标channel有缓冲区，但缓冲区中没有数据时，读取会阻塞</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span> <span class="c1">//fatal error: all goroutines are asleep - deadlock!
+</span><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>2.目标channel没有缓冲区，且发送队列没有数据时，读取会阻塞</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span> <span class="c1">//fatal error: all goroutines are asleep - deadlock!
+</span><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>3.目标channel为关闭状态时，会返回channel中数据类型的零值</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="c1">//0
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>4.目标channel为只写channel时，读取数据会失败</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span>
+	<span class="nx">ch</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span> <span class="c1">//invalid operation: &lt;-ch (receive from send-only type chan&lt;- int)
+</span><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="关于读取阻塞">关于读取阻塞</h2>
+<p>上面学习到如果channel没有内容或者发送队列没有内容时，则会读取阻塞</p>
+<p>如果我们有需要等待channel中有数据然后读取的情况下，可以用select来解决读取阻塞的问题</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
+
+	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+		<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
+		<span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
+	<span class="p">}()</span>
+
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span><span class="p">:</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;读取到了数据: %v\n&#34;</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span>
+			<span class="k">return</span>
+		<span class="k">default</span><span class="p">:</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;没有读取到数据..&#34;</span><span class="p">)</span>
+			<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="关于panic">关于panic</h2>
+<p>上面学习发送数据的时候学到了如果向已经关闭的channel中发送数据的话会报panic</p>
+<p>在Golang中，panic会导致程序退出</p>
+<p>所以为了防止出现这种问题，可以使用recover来捕获panic，不让程序异常退出</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+	<span class="nx">res</span> <span class="o">:=</span> <span class="nf">readCh</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">res</span><span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;读取成功...&#34;</span><span class="p">)</span>
+	<span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;读取失败...&#34;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;继续后续工作......&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">readCh</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span> <span class="o">&lt;-</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="c1">// 添加了recover来捕获panic时，主进程不会退出,这里处理失败之后主进程还能进行后续工作
+</span><span class="c1"></span>    <span class="c1">// 如果这里没有捕获panic，则会导致整个程序的退出
+</span><span class="c1"></span>	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">{</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="c1">//send on closed channel
+</span><span class="c1"></span>		<span class="p">}</span>
+	<span class="p">}()</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
+	<span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>这里的recover也可以运用到其它容易发生panic的地方</li>
+</ul>
+<h2 id="学习资料">学习资料</h2>
+<p><a href="https://www.bilibili.com/video/BV1ME411Y71o?spm_id_from=333.999.0.0">https://www.bilibili.com/video/BV1ME411Y71o?spm_id_from=333.999.0.0</a></p>
+<p><a href="https://halfrost.com/go_channel/#toc-16">https://halfrost.com/go_channel/#toc-16</a></p>
+<p><a href="https://note.youdao.com/ynoteshare/index.html?id=65b5a66c02398d0317f90882e20c16c0&amp;type=note&amp;_time=1636960393412">https://note.youdao.com/ynoteshare/index.html?id=65b5a66c02398d0317f90882e20c16c0&amp;type=note&amp;_time=1636960393412</a></p>
+<p><a href="https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-channel/#641-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86">https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-channel/#641-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86</a></p>
+]]></description>
+</item><item>
     <title>Golang之Map</title>
     <link>https://testoai.github.io/posts/golang-map/</link>
     <pubDate>Sat, 03 Jul 2021 00:00:00 &#43;0800</pubDate>

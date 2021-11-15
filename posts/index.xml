@@ -3,7 +3,414 @@
         <title>所有文章 - 菜狗瑞的学习记笔记</title>
         <link>https://testoai.github.io/posts/</link>
         <description>所有文章 | 菜狗瑞的学习记笔记</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 03 Sep 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://testoai.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 15 Nov 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://testoai.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Golang之channel</title>
+    <link>https://testoai.github.io/posts/golang-channel/</link>
+    <pubDate>Mon, 15 Nov 2021 00:00:00 &#43;0000</pubDate>
+    <author>作者</author>
+    <guid>https://testoai.github.io/posts/golang-channel/</guid>
+    <description><![CDATA[<h2 id="什么是channel">什么是Channel</h2>
+<ul>
+<li>
+<p>channel是golang中的一种数据类型，它像一个管道或者是队列，规则是先入先出，可以保证数据的顺序。</p>
+</li>
+<li>
+<p>声明channel时需要指定channel中存放数据的类型</p>
+</li>
+<li>
+<p>channel是并发安全的，它可以被用来做程间通信</p>
+</li>
+<li>
+<p>channel是引用类型</p>
+</li>
+</ul>
+<h2 id="channel的结构">channel的结构</h2>
+<p>runtime.hchan</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">hchan</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">qcount</span>   <span class="kt">uint</span>           <span class="c1">// total data in the queue
+</span><span class="c1"></span>	<span class="nx">dataqsiz</span> <span class="kt">uint</span>           <span class="c1">// size of the circular queue
+</span><span class="c1"></span>	<span class="nx">buf</span>      <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span> <span class="c1">// points to an array of dataqsiz elements
+</span><span class="c1"></span>	<span class="nx">elemsize</span> <span class="kt">uint16</span>
+	<span class="nx">closed</span>   <span class="kt">uint32</span>
+	<span class="nx">elemtype</span> <span class="o">*</span><span class="nx">_type</span> <span class="c1">// element type
+</span><span class="c1"></span>	<span class="nx">sendx</span>    <span class="kt">uint</span>   <span class="c1">// send index
+</span><span class="c1"></span>	<span class="nx">recvx</span>    <span class="kt">uint</span>   <span class="c1">// receive index
+</span><span class="c1"></span>	<span class="nx">recvq</span>    <span class="nx">waitq</span>  <span class="c1">// list of recv waiters
+</span><span class="c1"></span>	<span class="nx">sendq</span>    <span class="nx">waitq</span>  <span class="c1">// list of send waiters
+</span><span class="c1"></span>
+	<span class="c1">// lock protects all fields in hchan, as well as several
+</span><span class="c1"></span>	<span class="c1">// fields in sudogs blocked on this channel.
+</span><span class="c1"></span>	<span class="c1">//
+</span><span class="c1"></span>	<span class="c1">// Do not change another G&#39;s status while holding this lock
+</span><span class="c1"></span>	<span class="c1">// (in particular, do not ready a G), as this can deadlock
+</span><span class="c1"></span>	<span class="c1">// with stack shrinking.
+</span><span class="c1"></span>	<span class="nx">lock</span> <span class="nx">mutex</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>qcount</code> channel中的元素个数</li>
+<li><code>dataqsiz</code> channel中循环队列的长度</li>
+<li><code>buf</code> channel的缓冲区指针</li>
+<li><code>sendx</code> channel的发送操作处理到的位置</li>
+<li><code>recvx</code> channel的接收操作处理到的位置</li>
+<li><code>recvq</code> channel等待读取的goroutine队列</li>
+<li><code>sendq</code> channel等待发送的goroutine队列</li>
+</ul>
+<h2 id="创建channel">创建channel</h2>
+<p>创建channel时需要使用make来创建</p>
+<p>channel分为带缓冲区的channel和不带缓冲区的channel</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//带缓冲区的
+</span><span class="c1"></span><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">string</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">//不带缓冲区的
+</span><span class="c1"></span><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当make的时候会对传入的缓冲区大小进行判断，如果make的时候缓冲区大小没有传值，那么当前缓冲区大小就会被设置为默认值0，也就是没有缓冲区</p>
+<h2 id="发送数据">发送数据</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">i</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="发送数据需要注意的地方">发送数据需要注意的地方</h3>
+<ul>
+<li>1.如目标channel创建时定义存放的数据类型是int类型时，那么发送数据时只能发送int类型的数据</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="s">&#34;test&#34;</span> <span class="c1">//cannot use &#34;test&#34; (type untyped string) as type int in send
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>2.当目标channel没有缓冲区，且等待接收队列中没有goroutine，会阻塞发送</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span> <span class="c1">//fatal error: all goroutines are asleep - deadlock!
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>3.当目标channel处于关闭状态时，会报panic，提示通道已关闭</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span> <span class="c1">//panic: send on closed channel
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>4.当目标channel缓冲区已满时，且等待队列中没有goroutine，会阻塞发送</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">2</span> <span class="c1">//fatal error: all goroutines are asleep - deadlock!
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>5.当声明的目标channel为只读的channel时，无法写入数据</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="kd">chan</span> <span class="kt">int</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">2</span> <span class="c1">//invalid operation: ch &lt;- 2 (send to receive-only type &lt;-chan int)
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="读取数据">读取数据</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">ch</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="读取数据需要注意的地方">读取数据需要注意的地方</h3>
+<ul>
+<li>1.目标channel有缓冲区，但缓冲区中没有数据时，读取会阻塞</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span> <span class="c1">//fatal error: all goroutines are asleep - deadlock!
+</span><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>2.目标channel没有缓冲区，且发送队列没有数据时，读取会阻塞</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span> <span class="c1">//fatal error: all goroutines are asleep - deadlock!
+</span><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>3.目标channel为关闭状态时，会返回channel中数据类型的零值</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="c1">//0
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>4.目标channel为只写channel时，读取数据会失败</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span>
+	<span class="nx">ch</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span> <span class="c1">//invalid operation: &lt;-ch (receive from send-only type chan&lt;- int)
+</span><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="关于读取阻塞">关于读取阻塞</h2>
+<p>上面学习到如果channel没有内容或者发送队列没有内容时，则会读取阻塞</p>
+<p>如果我们有需要等待channel中有数据然后读取的情况下，可以用select来解决读取阻塞的问题</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
+
+	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+		<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
+		<span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
+	<span class="p">}()</span>
+
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nx">a</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span><span class="p">:</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;读取到了数据: %v\n&#34;</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span>
+			<span class="k">return</span>
+		<span class="k">default</span><span class="p">:</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;没有读取到数据..&#34;</span><span class="p">)</span>
+			<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="关于panic">关于panic</h2>
+<p>上面学习发送数据的时候学到了如果向已经关闭的channel中发送数据的话会报panic</p>
+<p>在Golang中，panic会导致程序退出</p>
+<p>所以为了防止出现这种问题，可以使用recover来捕获panic，不让程序异常退出</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+	<span class="nx">res</span> <span class="o">:=</span> <span class="nf">readCh</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">res</span><span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;读取成功...&#34;</span><span class="p">)</span>
+	<span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;读取失败...&#34;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;继续后续工作......&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">readCh</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span> <span class="o">&lt;-</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="c1">// 添加了recover来捕获panic时，主进程不会退出,这里处理失败之后主进程还能进行后续工作
+</span><span class="c1"></span>    <span class="c1">// 如果这里没有捕获panic，则会导致整个程序的退出
+</span><span class="c1"></span>	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">{</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="c1">//send on closed channel
+</span><span class="c1"></span>		<span class="p">}</span>
+	<span class="p">}()</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
+	<span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>这里的recover也可以运用到其它容易发生panic的地方</li>
+</ul>
+<h2 id="学习资料">学习资料</h2>
+<p><a href="https://www.bilibili.com/video/BV1ME411Y71o?spm_id_from=333.999.0.0">https://www.bilibili.com/video/BV1ME411Y71o?spm_id_from=333.999.0.0</a></p>
+<p><a href="https://halfrost.com/go_channel/#toc-16">https://halfrost.com/go_channel/#toc-16</a></p>
+<p><a href="https://note.youdao.com/ynoteshare/index.html?id=65b5a66c02398d0317f90882e20c16c0&amp;type=note&amp;_time=1636960393412">https://note.youdao.com/ynoteshare/index.html?id=65b5a66c02398d0317f90882e20c16c0&amp;type=note&amp;_time=1636960393412</a></p>
+<p><a href="https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-channel/#641-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86">https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-channel/#641-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86</a></p>
+]]></description>
+</item><item>
     <title>工作日记-让放射设备快速从Dicom服务上刷到worklist的方法</title>
     <link>https://testoai.github.io/posts/%E5%B7%A5%E4%BD%9C%E6%97%A5%E8%AE%B0%E4%B9%8B%E8%81%94%E8%B0%83%E6%94%BE%E5%B0%84%E8%AE%BE%E5%A4%87%E6%97%B6%E5%A6%82%E4%BD%95%E8%AE%A9%E8%AE%BE%E5%A4%87%E5%BF%AB%E9%80%9F%E5%88%B7%E5%88%B0worklist/</link>
     <pubDate>Fri, 03 Sep 2021 00:00:00 &#43;0000</pubDate>
@@ -3064,544 +3471,5 @@ rabbitmqctl-plugins enable rabbitmq_management # 开启web管理插件，如果�
 <p><code>crontab /etc/crontab</code>：用于<code>root</code>用户编辑完<code>/etc/crontab</code>后刷新任务列表</p>
 <p><code>crontab -r</code>：删除当前用户的所有任务，<strong><u>注意是删除所有，慎用</u></strong></p>
 ]]></description>
-</item><item>
-    <title>linux(Centos7)相关命令 持续更新...</title>
-    <link>https://testoai.github.io/posts/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</link>
-    <pubDate>Sat, 10 Apr 2021 00:00:00 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>https://testoai.github.io/posts/linuxcentos7%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4/</guid>
-    <description><![CDATA[<h2 id="文件操作相关">文件操作相关</h2>
-<h3 id="文件拷贝-cp">文件拷贝 cp</h3>
-<ul>
-<li>拷贝文件：<code>cp 要拷贝的文件 目标路径</code></li>
-<li>拷贝文件<code>redis.conf</code>到<code>/etc/</code>目录下</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# cp redis.conf /etc/
-[root@rui redis-6.2.0]# ls /etc/redis.conf 
-/etc/redis.conf
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>拷贝文件夹：<code>cp -r 要拷贝的文件夹 目标路径</code></li>
-<li>拷贝文件夹<code>redis-6.2.0</code>到<code>/usr/local/</code>目录下</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui home]# cp -r redis-6.2.0/ /usr/local/
-[root@rui home]# ls /usr/local/
-bin  games    lib    libexec  redis-6.2.0  share
-etc  include  lib64  proc     sbin         src
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="文件移动-mv">文件移动 mv</h3>
-<ul>
-<li>移动文件夹/文件：<code>mv 要移动的文件夹或者是文件 目标路径</code></li>
-<li>移动文件<code>redis.conf</code>到<code>src</code>目录下</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# mv redis.conf src/
-[root@rui redis-6.2.0]# ls src/redis.conf 
-src/redis.conf
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="文件查找">文件查找</h3>
-<ul>
-<li>方式一：<code>find 要查找的路径 -name 要查找的文件</code></li>
-<li><code>find</code>会遍历指定路径下的所有文件，然后返回符合条件的，支持模糊查询</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# find ./ -name redis.c*
-./src/redis.conf
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>方式二：<code>locate 要查找的文件</code></li>
-<li><code>locate</code> 在<code>/var/lib/mlocate/</code>目录下存放着一个数据库文件，其实使用<code>locate</code>查询是查询的数据库，所以<code>locate</code>非常快</li>
-<li><code>locate</code>会返回所有包含文件名的文件</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/red
-/home/redis-6.2.0/src/redis-benchmark
-/home/redis-6.2.0/src/redis-benchmark.c
-/home/redis-6.2.0/src/redis-benchmark.d
-/home/redis-6.2.0/src/redis-benchmark.o
-/home/redis-6.2.0/src/redis-check-aof
-/home/redis-6.2.0/src/redis-check-aof.c
-/home/redis-6.2.0/src/redis-check-aof.d
-/home/redis-6.2.0/src/redis-check-aof.o
-/home/redis-6.2.0/src/redis-check-rdb
-/home/redis-6.2.0/src/redis-check-rdb.c
-/home/redis-6.2.0/src/redis-check-rdb.d
-/home/redis-6.2.0/src/redis-check-rdb.o
-/home/redis-6.2.0/src/redis-cli
-/home/redis-6.2.0/src/redis-cli.c
-/home/redis-6.2.0/src/redis-cli.d
-/home/redis-6.2.0/src/redis-cli.o
-/home/redis-6.2.0/src/redis-sentinel
-/home/redis-6.2.0/src/redis-server
-/home/redis-6.2.0/src/redis-trib.rb
-/home/redis-6.2.0/src/redis.conf
-/home/redis-6.2.0/src/redisassert.h
-/home/redis-6.2.0/src/redismodule.h
-</code></pre></td></tr></table>
-</div>
-</div><p>然后新建一个文件，再查询一次</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# &gt; /home/redis-6.2.0/src/testfile
-[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/testf
-[root@rui redis-6.2.0]# ll /home/redis-6.2.0/src/testfile 
--rw-r--r--. 1 root root 0 Apr 10 22:37 /home/redis-6.2.0/src/testfile
-</code></pre></td></tr></table>
-</div>
-</div><p>可以看到，没有查到，因为<code>locate</code>的数据库不是实时更新的，可以使用<code>updatedb</code>手动更新，也可以把更新命令配置到系统的任务计划表，定时执行</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-tex" data-lang="tex">[root@rui redis-6.2.0]# updatedb
-[root@rui redis-6.2.0]# locate /home/redis-6.2.0/src/testf
-/home/redis-6.2.0/src/testfile
-</code></pre></td></tr></table>
-</div>
-</div><p>可以看到更新之后就查到了</p>
-<p>2021-05-13：</p>
-<h3 id="文件权限相关">文件权限相关</h3>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">[root@rui nginx]# ll
-total 12
-drwx------ 2 root root    6 Mar  8 11:49 client_body_temp
-drwxr-xr-x 2 root root 4096 May 10 11:39 conf
-drwx------ 2 root root    6 Mar  8 11:49 fastcgi_temp
-drwxr-xr-x 2 root root   38 Mar  8 10:50 html
-drwxr-xr-x 2 root root   55 Mar 29 10:01 logs
--rw-r--r-- 1 root root 4796 May 11 20:14 nginx.conf
-drwx------ 3 root root   14 Apr 29 10:04 proxy_temp
-drwxr-xr-x 2 root root   18 Mar  8 10:50 sbin
-drwx------ 2 root root    6 Mar  8 11:49 scgi_temp
-drwx------ 2 root root    6 Mar  8 11:49 uwsgi_temp
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>
-<p>total 12</p>
-<p>linux的数据存储是以块（block）为单位的，块可以理解成一个容器，每个块的大小可以用<code>getconf PAGESIZE</code>命令查看</p>
-<p>每个块的容量是4096B，也就是4K</p>
-</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">drwx</span><span class="o">------</span> <span class="mi">2</span> <span class="nx">root</span> <span class="nx">root</span>    <span class="mi">6</span> <span class="nx">Mar</span>  <span class="mi">8</span> <span class="mi">11</span><span class="p">:</span><span class="mi">49</span> <span class="nx">client_body_temp</span>
-</code></pre></td></tr></table>
-</div>
-</div><p><code>drwx------</code></p>
-<ul>
-<li>
-<p>d：表示文件夹，如果是-，则代表是文件</p>
-</li>
-<li>
-<p>r：表示有可读权限，用数字表示为4</p>
-</li>
-<li>
-<p>w：表示有可写权限，用数字表示为2</p>
-</li>
-<li>
-<p>x：表示有可执行权限，用数字表示为1</p>
-</li>
-<li>
-<p>rwx：文件权限</p>
-<ul>
-<li>
-<p>一个rwx可以理解为为一组权限，一个文件有三组，第一组为文件所属用户，第二组为所属用户组内的其他用户，第三组为其他用户</p>
-</li>
-<li>
-<p>如果显示为&quot;-&ldquo;符号则表示没有权限</p>
-</li>
-<li>
-<p>设置权限可以使用<code>chmod</code></p>
-</li>
-</ul>
-<p><code>chmod 741 filename</code></p>
-<ul>
-<li>741：
-<ul>
-<li>文件所属用户有该文件的可读、可写、可执行权限</li>
-<li>文件所属用户组内的其它用户有该文件的可读权限</li>
-<li>其他用户有该文件的可执行权限</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><code>drwx------ 2 root root 6 Mar  8 11:49 client_body_temp</code></p>
-<ul>
-<li>2：硬连接个数</li>
-<li>第一个root：文件所属用户</li>
-<li>第二个root：文件所属用户的组</li>
-<li>6：文件大小</li>
-<li>Mar  8 11:49：最后修改时间</li>
-<li>client_body_temp：文件名/目录名</li>
-</ul>
-<h2 id="vim相关"><code>vim</code>相关</h2>
-<h3 id="进入编辑模式">进入编辑模式</h3>
-<ul>
-<li>按<code>i</code>进入编辑模式后光标会在当前位置</li>
-<li>按<code>I</code>进入编辑模式后光标会在当前行行首</li>
-<li>按<code>a</code>进入编辑模式后，光标在当前字符后</li>
-<li>按<code>A</code>进入编辑模式后，光标会在当前行行尾</li>
-<li>按<code>o</code>进入编辑模式后，会在当前行下一行新开一行</li>
-<li>按<code>O</code>进入编辑模式后，会在当前行上一行新开一行</li>
-</ul>
-<p><code>我用的最多的是i</code></p>
-<h3 id="退出编辑模式">退出编辑模式</h3>
-<ul>
-<li>按<code>ESC</code>退出编辑模式</li>
-</ul>
-<h3 id="查找">查找</h3>
-<ul>
-<li>使用：<code>/要查找的内容</code></li>
-<li>使用<code>vim /文件名</code>打开文件后，输入<code>/</code>要查找的内容即可，比如下面我要在<code>redis.conf</code>配置文件中查找<code>bind</code>关键字</li>
-</ul>
-<a class="lightgallery" href="/img/image-20210410145934938.png" title="/img/image-20210410145934938.png" data-thumbnail="/img/image-20210410145934938.png">
-        
-    </a>
-<ul>
-<li>
-<p>然后可以输入回车，会查找到该文件中第一个<code>bind</code>，可以输入<code>n</code>定位到下一个，输入<code>N</code>定位到上一个</p>
-</li>
-<li>
-<p>取消高亮可以输入<code>nohlsearch</code>，简写为<code>noh</code>，也可以输入<code>set nohlsearch</code> ，简写为<code>set noh</code></p>
-</li>
-</ul>
-<h3 id="替换">替换</h3>
-<ul>
-<li>
-<p>把文件中的所有<code>127.0.0.1</code>替换为<code>120.5.5.153</code></p>
-<ul>
-<li>使用：<code>:%s/127.0.0.1/120.5.5.153/g</code></li>
-</ul>
-</li>
-<li>
-<p>把当前行的<code>127.0.0.1</code>替换为<code>120.5.5.153</code></p>
-<ul>
-<li>使用：<code>:S/127.0.0.1/120.5.5.153/g</code></li>
-</ul>
-</li>
-</ul>
-<p><code>还有很多替换相关的命令，这里只是写了常用的</code></p>
-<h3 id="退出">退出</h3>
-<ul>
-<li>退出不保存<code>:q</code></li>
-<li>强制退出不保存<code>:q!</code></li>
-<li>保存并退出<code>:wq</code></li>
-<li>强制保存并退出<code>:wq!</code></li>
-</ul>
-<h2 id="查看日志">查看日志</h2>
-<h3 id="实时刷新查看日志">实时刷新查看日志</h3>
-<ul>
-<li>方式一：使用：<code>tail -f -n 10 日志文件名称</code>
-<ul>
-<li><code>-f</code>：实时刷新</li>
-<li><code>-n</code>：行数关键字，后面跟行数，表示从后10行开始查看</li>
-</ul>
-</li>
-<li>方式二：使用：<code>tailf 日志文件名称</code>
-<ul>
-<li>默认从后十行开始查看</li>
-</ul>
-</li>
-</ul>
-<h3 id="查看日志前10行">查看日志前10行</h3>
-<ul>
-<li>使用：<code>head -n 行数 日志文件名称</code>
-<ul>
-<li><code>-n</code> ：行数关键字</li>
-</ul>
-</li>
-</ul>
-<h3 id="查看第10行到第20行">查看第10行到第20行</h3>
-<ul>
-<li>方式一：使用：<code>sed -n '10,20p' 日志文件名称</code>
-<ul>
-<li><code>-n</code>：打印指定行</li>
-<li><code>'10,20p'</code>：指定的行号</li>
-</ul>
-</li>
-<li>方式二：使用：<code>cat -n 日志文件名称 | head -n 20 | tail -n +10</code>
-<ul>
-<li><code>cat -n</code>：打印日志显示行号</li>
-<li><code>head -n 20</code>：打印到20行</li>
-<li><code>tail -n +10</code>：从第10行开始打印</li>
-</ul>
-</li>
-</ul>
-<p>2021.04.20</p>
-<h2 id="查看进程">查看进程</h2>
-<h3 id="ps命令">ps命令</h3>
-<p>ps （英文全拼：process status）命令用于显示当前进程的状态 &ndash;摘自菜鸟教程</p>
-<h4 id="参数">参数</h4>
-<ul>
-<li>-a：列出所有进程</li>
-<li>-w：显示加宽，可以显示更多内容</li>
-<li>-u：以用户为主的进程状态</li>
-<li>-x：显示当前用户在所有终端下的进程信息，通常和参数<code>a</code>一起使用</li>
-<li>-e：显示系统内所有的进程信息</li>
-<li>-l：使用长格式显示进程信息</li>
-<li>-f：使用完整的格式显示进程信息</li>
-</ul>
-<h4 id="筛选">筛选</h4>
-<ul>
-<li>在输入了上面命令后添加<code>|grep processName/processID</code></li>
-<li><code>ps -aux |grep mysql</code></li>
-</ul>
-<h3 id="根据进程查找文件">根据进程查找文件</h3>
-<ul>
-<li>
-<p>当因为某种原因找不到服务的存放位置时，可以使用上面的命令先查看进程的ID</p>
-</li>
-<li>
-<p>然后使用命令：<code>pwdx processID</code>命令查找该进程文件存放的位置</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>root@rabbitmq1 redis<span class="o">]</span><span class="c1"># ps -aux |grep redis</span>
-redis     <span class="m">4356</span>  0.1  2.3 <span class="m">323184</span> <span class="m">133272</span> ?       Ssl  4月19  25:12 /usr/bin/redis-server *:6379
-root      <span class="m">7194</span>  0.0  0.0 <span class="m">112736</span>   <span class="m">996</span> pts/1    S+   11:23   0:00 grep --color<span class="o">=</span>auto redis
-<span class="o">[</span>root@rabbitmq1 redis<span class="o">]</span><span class="c1"># pwdx 4356</span>
-4356: /var/lib/redis
-</code></pre></td></tr></table>
-</div>
-</div></li>
-</ul>
-<h2 id="查看端口号是否被监听">查看端口号是否被监听</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>root@pacs local<span class="o">]</span><span class="c1"># ss -tunlp |grep 3306</span>
-tcp    LISTEN     <span class="m">0</span>      <span class="m">128</span>       *:3306      *:*    users:<span class="o">((</span><span class="s2">&#34;docker-proxy&#34;</span>,pid<span class="o">=</span>28320,fd<span class="o">=</span>4<span class="o">))</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>2021.07.10</p>
-<h2 id="查看文件系统硬盘使用情况">查看文件系统硬盘使用情况</h2>
-<ul>
-<li>使用df来查看硬盘使用情况</li>
-</ul>
-<h3 id="参数-1">参数</h3>
-<ul>
-<li>a：显示所有文件信息</li>
-<li>m：以MB为单位显示容量</li>
-<li>k：以KB为单位显示容量</li>
-<li>h：以KB、MB、GB为单位自行显示容量</li>
-<li>T：显示该分区的文件系统名称</li>
-<li>i：不用硬盘容量显示，而是以含有inode的数量来显示</li>
-</ul>
-<p>使用的最多的是df -h</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">[root@pacs ~]# df -h
-Filesystem               Size  Used Avail Use% Mounted on
-devtmpfs                 7.8G     0  7.8G   0% /dev
-tmpfs                    7.8G     0  7.8G   0% /dev/shm
-tmpfs                    7.8G  777M  7.0G  10% /run
-tmpfs                    7.8G     0  7.8G   0% /sys/fs/cgroup
-/dev/mapper/centos-root   50G   15G   36G  29% /
-/dev/mapper/centos-home  167G   83G   84G  50% /home
-/dev/xvda1               497M  219M  279M  45% /boot
-tmpfs                    1.6G   12K  1.6G   1% /run/user/42
-tmpfs                    1.6G     0  1.6G   0% /run/user/385
-tmpfs                    1.6G     0  1.6G   0% /run/user/0
-/dev/dm-5                 30G  550M   30G   2% /home/apps/docker/devicemapper/mnt/716b06271724538bfaad350c0a054dde7e54db34e28c417f07842564d8a14021
-/dev/dm-6                 30G  526M   30G   2% /home/apps/docker/devicemapper/mnt/cd888eb5fe250ab255fc13646a5fd4de943b2b1bf162f64a7146697378ae9424
-/dev/dm-7                 30G   12G   19G  38% /home/apps/docker/devicemapper/mnt/4e95d08a9f25293974b18da280484a55cd1359e593d60c1a0db5697642c24c13
-/dev/dm-8                 30G  493M   30G   2% /home/apps/docker/devicemapper/mnt/652cb0933f40cea24bfd8df3ec43e63f02e65a51cd48bbd4fd4d8a617da2f7ac
-/dev/dm-9                 30G  494M   30G   2% /home/apps/docker/devicemapper/mnt/3c74dba554f0e812152b80e1fc6d12865530ed573b57059d3cb01e0f3099c704
-/dev/dm-10                30G  9.0G   22G  30% /home/apps/docker/devicemapper/mnt/8fc80177eea5c6f9565c102a9c1d234796e2ee9d9f444067522ed7d36765d0b4
-</code></pre></td></tr></table>
-</div>
-</div><p>20210728</p>
-<h2 id="用户组和用户操作">用户组和用户操作</h2>
-<h3 id="创建和删除">创建和删除</h3>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 添加用户组</span>
-groupadd tester
-
-<span class="c1"># 在tester用户组下创建一个用户</span>
-useradd -g tester testA
-
-<span class="c1"># 给testA创建密码</span>
-passwd testA
-
-<span class="c1"># 修改用户密码</span>
-<span class="c1"># 修改root用户:</span>
-passwd
-<span class="c1"># 修改其它用户（需要使用root用户修改）:</span>
-passwd testA
-
-<span class="c1"># 查看用户属于那个组</span>
-groups testA
-id testA
-
-<span class="c1"># 删除用户</span>
-userdel testA
-<span class="c1"># 删除用户组</span>
-groupdel tester
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="权限">权限</h3>
-<ul>
-<li>将/data/test/start.sh文件的拥有者赋予用户testA</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">chown testA:tester /data/test/start.sh
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>将/data/test目录及其下面的所有文件的拥有者赋予用户test1（使用-R参数）</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">chown -R testA:tester /data/test
-</code></pre></td></tr></table>
-</div>
-</div>]]></description>
 </item></channel>
 </rss>
