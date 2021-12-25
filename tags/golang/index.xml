@@ -326,10 +326,10 @@
 	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
 
 	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
 		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
 		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
 		<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
-		<span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
 	<span class="p">}()</span>
 
 	<span class="k">for</span> <span class="p">{</span>

@@ -181,10 +181,10 @@ func main() {
 	defer wg.Wait()
 
 	go func() {
+        defer wg.Done()
 		time.Sleep(5 * time.Second)
 		time.Sleep(1000)
 		ch <- 1
-		wg.Done()
 	}()
 
 	for {
